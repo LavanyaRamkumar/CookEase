@@ -1,1 +1,0 @@
-<img src="assets/images/cuisines/mexican.jpg" class = "cuisine-images-css">$<img src="assets/images/cuisines/italian.jpg" class = "cuisine-images-css">$<img src="assets/images/cuisines/indian.jpg" class = "cuisine-images-css">$<img src="assets/images/cuisines/thai.jpg" class = "cuisine-images-css">$

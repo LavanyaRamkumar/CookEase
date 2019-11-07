@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,jsonify
 from flask_restful import Resource, Api
 from flask_cors import cross_origin, CORS
 import pickle
@@ -18,6 +18,18 @@ class Test(Resource):
 	def get(self):
 		return "hello world"
 api.add_resource(Test, '/')
+
+class GetCuisines(Resource):
+	def get(self):
+		# images are located at ui/assets/images/cuisines/file_name.jpg
+		return jsonify({
+			"Mexican":"Mexican.jpg",
+			"Italian":"Italian.jpg",
+			"Indian":"Indian.jpg",
+			"Thai":"Thai.jpg"
+		}
+		)
+api.add_resource(GetCuisines, '/get_cuisines')
 
 if __name__ == '__main__':
 	with open("../data/ingredients.pkl", "rb") as file:

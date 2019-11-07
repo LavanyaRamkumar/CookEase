@@ -8,14 +8,13 @@ function get_cuisines(){
     req.onreadystatechange = function()
     {
     if(this.readyState == 4 && this.status == 200) {
-        var res = req.responseText;
-        var resArr = res.split("$");
+        var res = JSON.parse(this.responseText);
         var listing = document.getElementById("cuidiv");
         var card_init='<div class="card col-12 col-md-6 col-lg-3"> <div class="icon-block"><a href="listing.html" id="'
         var card_mid_1='"></a></div><h5 class="mbr-fonts-style display-5">'
         var card_end='<br></h5></div>'
-        for (x of resArr){
-            var spl=x.split(":");
+        for (x in res){
+            var spl=[x,res[x]];
             console.log(spl)
             var content=card_init+spl[0]+card_mid_1+spl[0]+card_end;
             listing.innerHTML+=content;
@@ -25,7 +24,7 @@ function get_cuisines(){
         console.log("working on it!");
     }
     }
-    req.open('GET', 'http://localhost:4000/assets/our/msd/cuisines.txt', true);
+    req.open('GET', 'http://localhost:5000/get_cuisines', true);
     req.send();
 }
 
