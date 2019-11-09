@@ -7,8 +7,7 @@ api = Api(app)
 
 class Recipes(Resource):
 	def get(self):
-		# return {'hello': 'world', "ingredients": recipes[1]}
-		return str(recipes[list(recipes.keys())[0]])
+		return recipes[list(recipes.keys())[0]]
 
 api.add_resource(Recipes, '/cookease/recipes/')
 
