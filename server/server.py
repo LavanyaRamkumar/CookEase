@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
->>>>>>> ce5a76df28188548069e7239e8cd6a38c9a536b1
 from flask_restful import Resource, Api
 from flask_cors import cross_origin, CORS
 import pickle
@@ -7,7 +6,7 @@ import json
 
 app = Flask(__name__)
 api = Api(app)
-cors = CORS(app, resources={r'/*':{"origins": 'http://localhost:4000'}})
+cors = CORS(app, resources={r'/*':{"origins": 'http://localhost'}})
 
 def match(recipe, pantry):
 	total = len(recipe["ingredients"])
@@ -60,8 +59,39 @@ class RecipesId(Resource):
 			answer.append(recipes[num])
 		return answer
 
+class getIngredients(Resource):
+	def get(self, match_str):
+		ing_types = ingredients.keys()
+
+		match_str = match_str.lower()
+		answers = []
+		for ing in ing_types:
+			temp = [i for i in ingredients[ing] if match_str==i[:len(match_str)]]
+			answers+=temp
+
+		answers = sorted(answers, key=lambda x:x.replace(' ', ''))
+		return jsonify(sorted(answers, key=lambda x: ''.join(x.split()), reverse=True))
+
+class getCategory(Resource):
+	def get(self, match_str):
+		ing_types = ingredients.keys()
+
+		match_str = match_str.lower()
+		answer = "Other"
+		for ing in ing_types:
+			if match_str in ingredients[ing]:
+				answer = ing
+				break
+		print(answer)
+		if answer=='Condiment':
+			answer = "Herbs and Spices"
+		return jsonify(answer)
+
+
 api.add_resource(Recipes, '/cookease/recipes/')
 api.add_resource(RecipesId, '/cookease/recipes/id/')
+api.add_resource(getIngredients, '/cookease/ingredient/<match_str>')
+api.add_resource(getCategory, '/cookease/category/<match_str>')
 
 class Test(Resource):
 	def get(self):
@@ -81,8 +111,8 @@ class GetCuisines(Resource):
 api.add_resource(GetCuisines, '/get_cuisines')
 
 if __name__ == '__main__':
-	with open("../data/ingredients.pkl", "rb") as file:
-		ingredients = list(pickle.load(file))
+	with open("../data/categorical_ingredients", "rb") as file:
+		ingredients = pickle.load(file)
 	with open("../data/id_recipes.pkl", "rb") as file:
 		recipes = pickle.load(file)
 	app.run(debug=True)
