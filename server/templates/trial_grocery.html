@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pantry</title>
+	<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="assets/our/trialgroc.css">
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+	<style>
+
+.input {
+	margin: auto;
+	display:block;
+}
+
+.card-deck {
+	margin-top:20px;
+}
+
+.card-header {
+	font-size:1.3em;
+	font-family: "Montserrat"
+}
+
+.card-title {
+	font-size:1.1em;
+	margin-top:30px;
+	font-family: "Montserrat";display:inline; 
+	position: relative;
+}
+
+.holder {
+	display:block;
+	margin-top: 10px;
+}
+
+.dropdown-item {
+	background: white;
+}
+
+.neg {
+	float: right;
+	background: red;
+	border-radius: 50px;
+	width: 20px;
+	height: 20px;
+	border: none;
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.card-img-top {
+	height: 110px;
+	display:block;
+}
+
+#background {
+	width: 100vw;
+	height: 100vh;
+	/*-webkit-filter: blur(8px);*/
+	overflow: hidden;
+	position: absolute;
+}
+
+
+	</style>
+<script src="assets/web/assets/jquery/jquery.min.js"></script>
+<script>
+	ingredients = Array()
+
+	function toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
+	var objIngredient = {
+		xhr: new XMLHttpRequest(),
+		get: function() {
+			this.xhr.open("GET", "http://localhost:5000/cookease/ingredient/"+document.getElementById("enteredIng").value, false)
+			this.xhr.onreadystatechange = this.set
+			this.xhr.send()
+		},
+		set: function() {
+			if(this.readyState==4 && this.status==200) {
+				dropdownController.show(JSON.parse(this.response).slice(0, 10))
+			}
+		}
+	}
+
+	var objCategory = {
+		xhr: new XMLHttpRequest(),
+		matchStr: "",
+		get: function(matchStr) {
+			this.matchStr = matchStr
+			this.xhr.open("GET", "http://localhost:5000/cookease/category/"+matchStr, false)
+			this.xhr.onreadystatechange = this.set
+			this.xhr.send()
+		},
+		set: function() {
+			if(this.readyState==4 && this.status==200) {
+				add(JSON.parse(this.response), objCategory.matchStr)
+			}
+		}
+	}
+
+	var dropdownController = {
+		pos: 0,
+		len: 0,
+		hide: function() {
+			dropdown = document.getElementById("dropdown")
+			dropdown.style.display = "none"
+			dropdown.innerHTML = ""
+		},
+		show: function(arr) {
+			dropdown = document.getElementById("dropdown")
+			dropdown.style.display = "block"
+			dropdown.innerHTML = ""
+			this.len = arr.length
+			this.pos = arr.length
+			this.val = document.getElementById("enteredIng").value
+
+			for (var i = arr.length - 1; i >= 0; i--) {
+				newa = document.createElement("a")
+				newa.innerHTML = arr[i]
+				newa.className = "dropdown-item"
+				newa.href="#"
+				dropdown.appendChild(newa)
+			}
+
+		},
+
+		move: function(num) {
+			dropdown = document.getElementById("dropdown")
+			if(this.pos!=this.len)
+				dropdown.childNodes[this.pos].className = "dropdown-item"
+			this.pos = (this.pos+num)%(this.len+1)
+			if(this.pos<0)
+				this.pos+=(this.len+1)
+			if(this.pos!=this.len){
+				dropdown.childNodes[this.pos].className = "dropdown-item active"
+				document.getElementById("enteredIng").value = dropdown.childNodes[this.pos].innerHTML
+			}
+			else {
+				document.getElementById("enteredIng").value = this.val	
+			}
+		}
+	}
+
+	function getVal(e) {
+		if(e.key=="Enter") {
+			theval = e.target.value
+			e.target.value=""
+			dropdownController.hide()
+			objCategory.get(theval)
+			return
+		}
+		if(e.key=="ArrowDown") {
+			dropdownController.move(1)
+			return
+		}
+		if(e.key=="ArrowUp") {
+			dropdownController.move(-1)
+			return
+		}
+		objIngredient.get()
+	}
+
+	function add(cat, name, force) {
+		// ingredients.append(Array(cat, name))
+		obj = JSON.parse(localStorage.getItem("pantry"))
+		if(obj[toTitleCase(name)]!=null && force==null)
+			return
+		obj[toTitleCase(name)] = cat
+		localStorage.setItem("pantry", 	JSON.stringify(obj))
+		console.log(obj)
+		catDeck = document.getElementById(cat)
+		console.log(cat)
+		newdiv = document.createElement("div")
+		newdiv.className= "holder"
+		title = document.createElement("h5")
+		title.className = "card-title"
+		title.innerHTML = toTitleCase(name)
+		negButton = document.createElement("button")
+		negButton.className = "neg"
+		negButton.value = '&nbsp<span class="glyphicon glyphicon-minus" style="color:white"></span>'
+		negButton.onclick = remove
+
+		newdiv.appendChild(title)
+		newdiv.appendChild(negButton)
+
+		catDeck.appendChild(newdiv)
+
+	}
+
+	function remove(e) {
+		holder = e.target.parentElement
+		obj = JSON.parse(localStorage.getItem("pantry"))
+		delete obj[holder.childNodes[0].innerHTML]
+		localStorage.setItem("pantry", 	JSON.stringify(obj))
+		holder.parentElement.removeChild(holder)
+	}
+
+	function create() {
+		if(localStorage.getItem("pantry")==null){
+			console.log("empty")
+			localStorage.setItem("pantry", JSON.stringify(new Object()))
+		}
+		else {
+			console.log("not empty")
+			obj = JSON.parse(localStorage.getItem("pantry"))
+			objkeys = Object.keys(obj)
+			console.log(objkeys.length)
+			for (var i = objkeys.length - 1; i >= 0; i--) {
+				console.log(obj[objkeys[i]]+"  "+objkeys[i])
+				add(obj[objkeys[i]], objkeys[i], true)
+			}
+		}
+	}
+</script>
+</head>
+
+<body onload="create()">
+	<img id="background" src="assets/images/macaroon.jpg">
+<div class="form-group row" style="margin-top: 20px">
+  <div class="col-xs-5" style="margin:auto">
+    <input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)">
+  </div>
+</div>
+
+<div class="form-group row" style="position:absolute; z-index:3; right:0; left:0">
+<div id="dropdown" class="col-xs-5" style="margin:auto;display: none;" style="position:absolute;">
+</div>
+</div>
+
+<div class="card-deck wrapper" style="margin-right:10px; margin-left:10px">
+<div class="card text-dark bg-light mb-3">
+  <div class="card-header">Fruits and Vegetables</div>
+  <div class="card-body" id="Fruits and Vegetables">
+  	<img class="card-img-top" src="./assets/images/fv.jpg" alt="Card image cap" >
+    </div>
+</div>
+<div class="card text-dark bg-light mb-3">
+  <div class="card-header">Herbs and Spices</div>
+  <div class="card-body" id="Herbs and Spices">
+  	<img class="card-img-top" src="./assets/images/hs.jpg" alt="Card image cap">
+    </div>
+</div>
+<div class="card text-dark bg-light mb-3">
+  <div class="card-header">Staples</div>
+  <div class="card-body" id="Staple">
+  	<img class="card-img-top" src="./assets/images/stap.jpg" alt="Card image cap">
+  </div>
+</div>
+<div class="card text-dark bg-light mb-3">
+  <div class="card-header">Protein</div>
+  <div class="card-body" id="Protein">
+  	<img class="card-img-top" src="./assets/images/protein.jpeg" alt="Card image cap">
+  </div>
+</div>
+<div class="card text-dark bg-light mb-3">
+  <div class="card-header">Others</div>
+  <div class="card-body" id="Other">
+  	<img class="card-img-top" src="./assets/images/choc.jpeg" alt="Card image cap" style="display:block">
+  </div>
+</div>
+</div>
+</body>
+</html>
