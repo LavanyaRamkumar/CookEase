@@ -15,9 +15,9 @@ cors = CORS(app)
 def index():
 	return (render_template("index.html"))
 
-# @app.route("/menu.html")
-# def menu():
-# 	return (render_template("menu.html"))
+@app.route("/menu.html")
+def menu():
+	return (render_template("menu.html"))
 
 @app.route("/pf")
 def pf():
@@ -26,7 +26,7 @@ def pf():
 @app.route("/groceries")
 def groceries():
 	return (render_template("trial_grocery.html"))
-	
+
 def match(recipe, pantry):
 	total = len(recipe["ingredients"])
 	available = 0
