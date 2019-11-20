@@ -1,13 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import *
 from flask_restful import Resource, Api
 from flask_cors import cross_origin, CORS
 import pickle
 import json
 
-app = Flask(__name__)
-api = Api(app)
-cors = CORS(app, resources={r'/*':{"origins": 'http://localhost'}})
 
+
+app = Flask(__name__, static_folder='static')
+api = Api(app)
+#cors = CORS(app, resources={r'/*':{"origins": 'http://localhost:4000'}})
+cors = CORS(app)
+
+@app.route("/")
+def index():
+	return (render_template("index.html"))
+
+@app.route("/pf")
+def pf():
+	return (render_template("pf_msd.html"))
+	
 def match(recipe, pantry):
 	total = len(recipe["ingredients"])
 	available = 0
@@ -16,13 +27,15 @@ def match(recipe, pantry):
 			available+=1
 	return available/total
 
+
+
 class Recipes(Resource):
-	def get(self):
+	def post(self):
 		args = request.form
 		cuisine_query = args["cuisine"]
 		type_query = args["type"] 
 		pantry = args.getlist("Ingredients")
-
+		count = int(args["count"])
 		if pantry==None:
 			pantry = []
 
@@ -46,7 +59,13 @@ class Recipes(Resource):
 		for key in answers:			
 			probability.append((match(recipes[key], pantry), key))
 		probability.sort(reverse=True)
-		return [probability, [recipes[key] for _, key in probability]]
+		#print(probability)
+		for _,key in probability:
+			recipes[key]["key"] = key
+		prob, lis = [probability, [recipes[key] for _, key in probability]]
+		startIndex = count*6
+		endIndex = count*6+6
+		return jsonify({"prob":prob[startIndex:endIndex],"recipes":lis[startIndex:endIndex]})	
 
 class RecipesId(Resource):
 	def get(self):
@@ -54,15 +73,15 @@ class RecipesId(Resource):
 		id_list = args.getlist("id")
 
 		answer = []
-
+		print(recipes)
 		for num in id_list:
-			answer.append(recipes[num])
+			answer.append(recipes[int(num)])
 		return answer
 
 class getIngredients(Resource):
 	def get(self, match_str):
 		ing_types = ingredients.keys()
-
+		print(ing_types)
 		match_str = match_str.lower()
 		answers = []
 		for ing in ing_types:
