@@ -138,8 +138,8 @@ class GetCuisines(Resource):
 api.add_resource(GetCuisines, '/get_cuisines')
 
 if __name__ == '__main__':
-	with open("../data/categorical_ingredients", "rb") as file:
+	with open("static/data/categorical_ingredients", "rb") as file:
 		ingredients = pickle.load(file)
-	with open("../data/id_recipes.pkl", "rb") as file:
+	with open("static/data/id_recipes.pkl", "rb") as file:
 		recipes = pickle.load(file)
 	app.run(debug=True)
