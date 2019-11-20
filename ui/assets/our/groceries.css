@@ -1,11 +1,44 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900);
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700);
 
+.input {
+	margin: auto;
+	display:block;
+}
+
+.card-deck {
+	margin-top:20px;
+}
+
+.card-header {
+	font-size:1.3em;
+	font-family: "Montserrat"
+}
+
+.card-title {
+	font-size:1.5em;
+	margin-top:30px;
+	font-family: "Montserrat"
+}
+
+.btn-danger {
+	margin-top:25px;
+	float:right; 
+	border-radius: 50px;
+	height:40px;
+	width:40px;
+}
+
+img {
+	height: 110px;
+}
+
 body{
 	color:#4a5b65;
-	font-family: "Roboto", Arial, sans-serif;
+	font-family: Arial, sans-serif;
 	font-size:14px;
 	line-height: 20px;
+	vertical-align: middle;
 }
 
 *:focus{outline:none !important;}
