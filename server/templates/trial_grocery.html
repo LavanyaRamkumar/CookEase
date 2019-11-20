@@ -12,6 +12,8 @@
 	<link rel="stylesheet" href="static/assets/bootstrap/css/forpopup.min.css">
 	<script src="static/assets/web/assets/jquery/jquery.min.js"></script>
 	<script src="static/assets/bootstrap/js/forpopup.min.js"></script>
+	<script src="static/assets/our/import.js"></script> 
+
 	<style>
 
 .input {
@@ -237,6 +239,8 @@ html, body {
 </head>
 
 <body onload="create()" >
+		<script>HTMLImporter.import("menu.html");</script>
+
 	<img id="background" src="static/assets/images/macaroon.jpg">
 	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="float: right;margin-right: 100px;margin-top: 20px;padding: 6px 12px;height: 34px;">Upload Bill</button>
 

@@ -19,6 +19,10 @@ def index():
 def menu():
 	return (render_template("menu.html"))
 
+@app.route("/add_recipe")
+def add_recipe_html():
+	return (render_template("add_recipe.html"))
+
 @app.route("/pf")
 def pf():
 	return (render_template("pf_msd.html"))
