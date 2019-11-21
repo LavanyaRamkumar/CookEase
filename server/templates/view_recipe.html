@@ -64,6 +64,7 @@
             // var ingredients=jsn["ingredients"]
             var title=jsn["title"]
             var type=jsn["type"]
+            type=type.charAt(0).toUpperCase() + type.slice(1)
             
             document.getElementById("re_title").innerHTML=title;
             document.getElementById("re_cuisine").innerHTML=cuisine;

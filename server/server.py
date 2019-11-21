@@ -23,9 +23,20 @@ def index():
 def menu():
 	return (render_template("menu.html"))
 
-@app.route("/add_recipe")
+@app.route("/add_recipe", methods=['GET', 'POST'])
 def add_recipe_html():
-	return (render_template("add_recipe.html"))
+	if request.method=="GET":
+		a=set()
+		b=set()
+		for i in recipes.values():
+			a.add(i["type"])
+			b.add(i["cuisine"])
+		print(a,b)
+		# return jsonify(recipes)
+		return (render_template("add_recipe.html"))
+	else:
+		id=20482
+		return (render_template("view_recipe.html",id=str(id)))
 
 @app.route("/view_recipe/<id>")
 def view_recipe_by_id(id):
@@ -104,7 +115,7 @@ class RecipesId_recipe(Resource):
 			d={}
 			with open('static/data/items/'+str(id)+'.json') as f:
 				d = json.load(f)
-				print(d)
+				# print(d)
 			return jsonify(d)
 		except:
 			return jsonify({})
@@ -146,7 +157,7 @@ def convertBill():
 		return render_template('bill.html')
 
 	else:
-		output = subprocess.check_output("python items.py temp.jpg", shell=True)
+		output = subprocess.check_output("python3 items.py temp.jpg", shell=True)
 		return jsonify(output.decode("utf-8"))
 
 
