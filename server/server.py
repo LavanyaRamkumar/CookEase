@@ -128,13 +128,14 @@ class getCategory(Resource):
 def convertBill():
 	if request.method=="POST":
 		bill = request.files['bill']
-		bill.save("./temp.jpg")
+		bill.save("./static/temp/temp.jpg")
 		print("done")
 		return render_template('bill.html')
 
 	else:
-		output = subprocess.check_output("python items.py temp.jpg", shell=True)
-		return jsonify(output.decode("utf-8"))
+		# return "a\nb\nc\n"
+		output = subprocess.check_output("python items.py ./static/temp/temp.jpg", shell=True)
+		return output.decode("utf-8")
 
 
 api.add_resource(Recipes, '/cookease/recipes/')
