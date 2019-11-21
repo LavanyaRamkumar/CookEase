@@ -24,8 +24,9 @@ def add_recipe_html():
 	return (render_template("add_recipe.html"))
 
 @app.route("/pf")
-def pf():
+def view_recipe_html():
 	return (render_template("pf_msd.html"))
+
 
 @app.route("/groceries")
 def groceries():
