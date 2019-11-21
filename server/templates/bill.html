@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bill Upload</title>
+	<!-- <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap-grid.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap-reboot.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='our/trialgroc.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/logo4.png') }}" type="image/x-icon"> -->
+
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+	<!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/forpopup.min.css') }}">
+	<script src="{{ url_for('static', filename='web/assets/jquery/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='bootstrap/js/forpopup.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='our/import.js') }}"></script>  -->
+	<link rel="stylesheet" href="../static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/assets/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../static/assets/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="../static/assets/our/trialgroc.css">
+	<link rel="shortcut icon" href="../static/assets/images/logo4.png" type="image/x-icon">
+
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+	<link rel="stylesheet" href="../static/assets/bootstrap/css/forpopup.min.css">
+	<script src="../static/assets/web/assets/jquery/jquery.min.js"></script>
+	<script src="../static/assets/bootstrap/js/forpopup.min.js"></script>
+	<script src="../static/assets/our/import.js"></script> 
+	<style >
+		html, body {
+			background: white;
+		}
+		.spinner-grow {
+			margin: auto;
+		}
+	</style>
+	<script>
+		xhr = new XMLHttpRequest()
+		function billsubmit() {
+			console.log("hello")
+			xhr.open("GET", "http://localhost:5000/cookease/bill/", false)
+			xhr.onreadystatechange = showval
+			xhr.send()
+		}
+		function showval() {
+			console.log(xhr.readyState)
+			if(xhr.readyState==4 && xhr.status==200) {
+				document.body.innerHTML = xhr.responseText
+			}
+		}
+		setTimeout(billsubmit, 1000)
+	</script>
+</head>
+<body>
+<div class="spinner-grow text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+<div class="spinner-grow text-secondary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+<div class="spinner-grow text-success" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+</body>
+</html>
