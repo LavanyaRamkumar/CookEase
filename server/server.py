@@ -43,6 +43,7 @@ class Recipes(Resource):
 		cuisine_query = args["cuisine"]
 		type_query = args["type"] 
 		pantry = args.getlist("Ingredients")
+		pantry = [a.lower() for a in pantry]
 		count = int(args["count"])
 		if pantry==None:
 			pantry = []
@@ -66,14 +67,16 @@ class Recipes(Resource):
 		probability = []
 		for key in answers:			
 			probability.append((match(recipes[key], pantry), key))
+		
 		probability.sort(reverse=True)
-		#print(probability)
+
 		for _,key in probability:
 			recipes[key]["key"] = key
 		prob, lis = [probability, [recipes[key] for _, key in probability]]
 		startIndex = count*6
 		endIndex = count*6+6
 		return jsonify({"prob":prob[startIndex:endIndex],"recipes":lis[startIndex:endIndex]})	
+
 
 class RecipesId(Resource):
 	def get(self):

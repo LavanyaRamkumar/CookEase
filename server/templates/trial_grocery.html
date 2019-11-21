@@ -17,11 +17,13 @@
 
 .card-deck {
 	margin-top:20px;
+	background: white
 }
 
 .card-header {
 	font-size:1.3em;
 	font-family: "Montserrat"
+	background: white;
 }
 
 .card-title {
@@ -42,11 +44,14 @@
 
 .neg {
 	float: right;
-	background: red;
 	border-radius: 50px;
 	width: 20px;
 	height: 20px;
 	border: none;
+}
+
+.neg:hover {
+	background: #BBBBBB;
 }
 
 html, body {
@@ -62,7 +67,7 @@ html, body {
 #background {
 	width: 100vw;
 	height: 100vh;
-	/*-webkit-filter: blur(8px);*/
+	-webkit-filter: blur(8px);
 	overflow: hidden;
 	position: absolute;
 }
@@ -187,11 +192,11 @@ html, body {
 		newdiv = document.createElement("div")
 		newdiv.className= "holder"
 		title = document.createElement("h5")
-		title.className = "card-title"
+		title.className = "card-title "
 		title.innerHTML = toTitleCase(name)
-		negButton = document.createElement("button")
+		negButton = document.createElement("img")
 		negButton.className = "neg"
-		negButton.value = '&nbsp<span class="glyphicon glyphicon-minus" style="color:white"></span>'
+		negButton.src = "./static/assets/images/close.jpg"
 		negButton.onclick = remove
 
 		newdiv.appendChild(title)
@@ -229,7 +234,7 @@ html, body {
 </head>
 
 <body onload="create()">
-	<img id="background" src="static/assets/images/macaroon.jpg">
+	<img id="background" src="static/assets/images/ing_back.jpg">
 <div class="form-group row" style="margin-top: 20px">
   <div class="col-xs-5" style="margin:auto">
     <input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)">
@@ -241,32 +246,32 @@ html, body {
 </div>
 </div>
 
-<div class="card-deck wrapper" style="margin-right:10px; margin-left:10px">
-<div class="card text-dark bg-light mb-3">
+<div class="card-deck wrapper " style="margin-right:10px; margin-left:10px">
+<div class="card mb-3">
   <div class="card-header">Fruits and Vegetables</div>
   <div class="card-body" id="Fruits and Vegetables">
   	<img class="card-img-top" src="/static/assets/images/fv.jpg" alt="Card image cap" >
     </div>
 </div>
-<div class="card text-dark bg-light mb-3">
+<div class="card mb-3">
   <div class="card-header">Herbs and Spices</div>
   <div class="card-body" id="Herbs and Spices">
   	<img class="card-img-top" src="/static/assets/images/hs.jpg" alt="Card image cap">
     </div>
 </div>
-<div class="card text-dark bg-light mb-3">
+<div class="card mb-3">
   <div class="card-header">Staples</div>
   <div class="card-body" id="Staple">
   	<img class="card-img-top" src="/static/assets/images/stap.jpg" alt="Card image cap">
   </div>
 </div>
-<div class="card text-dark bg-light mb-3">
+<div class="card mb-3">
   <div class="card-header">Protein</div>
   <div class="card-body" id="Protein">
   	<img class="card-img-top" src="/static/assets/images/protein.jpeg" alt="Card image cap">
   </div>
 </div>
-<div class="card text-dark bg-light mb-3">
+<div class="card mb-3">
   <div class="card-header">Others</div>
   <div class="card-body" id="Other">
   	<img class="card-img-top" src="/static/assets/images/choc.jpeg" alt="Card image cap" style="display:block">
