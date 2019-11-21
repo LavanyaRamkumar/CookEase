@@ -35,6 +35,9 @@ def add_recipe_html():
 		# return jsonify(recipes)
 		return (render_template("add_recipe.html"))
 	else:
+		print(request.form)
+		file = request.files['file']
+		file.save("./static/data/food_images/temp.jpg")
 		id=20482
 		return (render_template("view_recipe.html",id=str(id)))
 

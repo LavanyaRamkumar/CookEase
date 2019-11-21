@@ -5,7 +5,7 @@
     <html  style=" overflow-x: hidden;max-width: 100%;">
     <head>
         <!-- {'Mexican': 735, 'Indian': 382, 'Italian': 913, 'Thai': 113} -->
-      <!-- Site made with Mobirise Website Builder v4.10.5, #m -->
+      
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="generator" content="Mobirise v4.10.5, mobirise.com">
@@ -25,7 +25,123 @@
       <link rel="stylesheet" href="{{ url_for('static', filename='assets/mobirise/css/mbr-additional.css') }}" type="text/css">
       <link rel="stylesheet" href="{{ url_for('static', filename='assets/our/cards.css') }}" type="text/css">
       <script src="{{ url_for('static', filename='assets/our/import.js') }}"></script> 
-     
+      <style>
+      
+.dropdown-item {
+    background: white;
+}
+
+.dropdown-item:hover{
+    cursor: pointer;
+}
+
+
+#enteredIng {
+	margin-top:20px;
+}
+
+      </style>
+     <script>
+          var a=0;
+         ingredients = Array()
+
+        function toTitleCase(str) {
+            return str.replace(
+                /\w\S*/g,
+                function(txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                }
+            );
+        }
+         var objIngredient = {
+		xhr: new XMLHttpRequest(),
+		get: function() {
+			this.xhr.open("GET", "http://localhost:5000/cookease/ingredient/"+document.getElementById("enteredIng").value, false)
+			this.xhr.onreadystatechange = this.set
+			this.xhr.send()
+		},
+		set: function() {
+			if(this.readyState==4 && this.status==200) {
+				dropdownController.show(JSON.parse(this.response).slice(0, 10))
+			}
+		}
+	}
+    var dropdownController = {
+		pos: 0,
+		len: 0,
+		hide: function() {
+			dropdown = document.getElementById("dropdown")
+			dropdown.style.display = "none"
+			dropdown.innerHTML = ""
+		},
+		show: function(arr) {
+			dropdown = document.getElementById("dropdown")
+			dropdown.style.display = "block"
+			dropdown.innerHTML = ""
+			this.len = arr.length
+			this.pos = arr.length
+			this.val = document.getElementById("enteredIng").value
+
+			for (var i = arr.length - 1; i >= 0; i--) {
+				newa = document.createElement("span")
+				newa.innerHTML = toTitleCase(arr[i])
+                newa.className = "dropdown-item"
+                newa.name=arr[i]
+                // newa.onclick = "click_ing("+arr[i]+")"
+                
+                newa.onclick=function(e){
+                    // alert(e.target.innerHTML);
+                    if(!ingredients.includes(e.target.innerHTML)){
+                        $("#container_satya").append('<li id="li'+(++a)+'"><label for="title" class="form-control-label mbr-fonts-style display-7">'+e.target.innerHTML+'&nbsp;&nbsp;</label><input type="text" name="'+e.target.name+'" data-form-field="Name" required="required" class="form-control display-7" id="name-form2-k" style="width: 60%;display:inline;" placeholder="Quantity/Description of Ingredient" >&nbsp;&nbsp;<button type="button" id="b'+a+'" style="background-color:transparent;border-color:transparent;outline:none;" onclick="myfunction(this)">&#10006;</button><br>&nbsp;</li>');
+                        ingredients.push(e.target.innerHTML);
+                    }
+                    document.getElementById("enteredIng").value=""
+                    dropdownController.hide()
+                    return true
+                };
+				dropdown.appendChild(newa)
+			}
+
+		},
+
+		move: function(num) {
+			dropdown = document.getElementById("dropdown")
+			if(this.pos!=this.len)
+				dropdown.childNodes[this.pos].className = "dropdown-item"
+			this.pos = (this.pos+num)%(this.len+1)
+			if(this.pos<0)
+				this.pos+=(this.len+1)
+			if(this.pos!=this.len){
+				dropdown.childNodes[this.pos].className = "dropdown-item active"
+				document.getElementById("enteredIng").value = dropdown.childNodes[this.pos].innerHTML
+			}
+			else {
+				document.getElementById("enteredIng").value = this.val	
+			}
+		}
+	}
+     function getVal(e) {
+         alert(e.key)
+		if(e.key=="Enter") {
+            alert(e)
+            theval = e.target.value
+            alert(theval)
+			e.target.value=""
+			dropdownController.hide()
+			// return true
+		}
+		if(e.key=="ArrowDown") {
+			dropdownController.move(1)
+			return
+		}
+		if(e.key=="ArrowUp") {
+			dropdownController.move(-1)
+			return
+		}
+		objIngredient.get()
+    }
+     </script>
+
       
       
       
@@ -51,7 +167,7 @@
                     <div class="row justify-content-center">
                         <div class="media-container-column col-lg-8" data-form-type="formoid">
                             <!---Formbuilder Form-->
-                            <form action="../list/list.html" method="POST" class="mbr-form form-with-styler" enctype="multipart/form-data">
+                            <form action="http://localhost:5000/add_recipe" method="POST" class="mbr-form form-with-styler" enctype="multipart/form-data" id="add_rec_form">
                                 <div class="row">
                                     
                                     <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
@@ -60,37 +176,48 @@
             
                                 <div  class="dragArea row">
             
-                                    <div class="col-md-12  form-group" data-for="name">
-                                        <label for="name-form1-k" class="form-control-label mbr-fonts-style display-7">Name of the Dish</label>
-                                        <input type="text" name="name" data-form-field="Name" required="required" class="form-control display-7" id="name-form1-k">
+                                    <div class="col-md-6  form-group" data-for="name">
+                                        <label for="title" class="form-control-label mbr-fonts-style display-7">Name of the Dish</label>
+                                        <input type="text" name="name" data-form-field="Name" required="required" class="form-control display-7" id="title">
+                                    </div>
+                                    <div data-for="message" class="col-md-6 form-group">
+                                        <label for="file" class="form-control-label mbr-fonts-style display-7">Upload Image</label>
+                                        <input type="file" accept=".jpg" name="file" data-form-field="File" class="form-control display-7" id="file-form1-k" required="required">
                                     </div>
                                     <div class="col-md-6  form-group" data-for="name">
-                                        <label for="select-form1-k" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
-                                        <select class="form-control display-7" name="select-form1-k">
+                                        <label for="cuisine" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
+                                        <select class="form-control display-7" name="cuisine">
                                           <option value="Indian">Indian</option>
                                           <option value="Italian">Italian</option>
                                           <option value="Mexican">Mexican</option>
                                           <option value="Thai">Thai</option>
                                         </select>
                                     </div>
-                                    <div data-for="message" class="col-md-6 form-group">
-                                        <label for="file" class="form-control-label mbr-fonts-style display-7">Upload Image</label>
-                                        <input type="file" name="file" data-form-field="File" class="form-control display-7" id="file-form1-k">
+                                    <div class="col-md-6  form-group" data-for="name">
+                                        <label for="type" class="form-control-label mbr-fonts-style display-7">Type</label>
+                                        <select class="form-control display-7" name="type">
+                                            <!-- {'desserts', 'appetisers', 'mains'} -->
+                                            <option value="mains">Main</option>
+                                            <option value="appetisers">Appetiser</option>
+                                            <option value="desserts">Dessert</option>
+                                        </select>
                                     </div>
                                     <div data-for="message" class="col-md-12 form-group">
-                                        <label for="message-form1-k" class="form-control-label mbr-fonts-style display-7">Description</label>
+                                            Add Ingredients : &nbsp;&nbsp;&nbsp;<br>
+                                            <input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)"> 
+                                            <div class="form-group row" style="position:absolute; z-index:3; right:0; left:0">
+                                                    <div id="dropdown" class="col-md-12" style="margin:auto;display: none;position:absolute;width: 100%;">
+                                                    </div>
+                                                    </div>
+                                          <!-- <button type="button" id="somebutton" class="btn btn-light display-8" style="padding: 2px 5px 2px 5px; ">Add</button>-->
+                                        </div> 
+                                        <div data-for="message" class="col-md-12 form-group">
+                                        <ul id="container_satya"></ul></div>
+                                        
+                                    <div data-for="message" class="col-md-12 form-group">
+                                        <label for="message-form1-k" class="form-control-label mbr-fonts-style display-7">Recipe</label>
                                         <textarea name="message" data-form-field="Message" class="form-control display-7" id="message-form1-k"></textarea>
                                     </div>
-                                    <div data-for="message" class="col-md-12 form-group">
-                                            Add Ingredients<br>
-                                        <button type="button" id="somebutton" class="btn btn-light display-8" style="padding: 2px 5px 2px 5px; ">Add</button>
-                                        <ul id="container_satya"></ul>
-                                    </div>
-                                    <!-- <div data-for="message" class="col-md-6 form-group">
-                                            Add Ingredients<br>
-                                        <button type="button" id="somebutton2" class="btn btn-light display-8" style="padding: 2px 5px 2px 5px; ">Add</button>
-                                        <ul id="container_satya2"></ul>
-                                    </div> -->
                                     <div class="col-md-12 input-group-btn align-center">
                                         <button type="submit" class="btn btn-primary btn-form display-4">UPLOAD RECIPE</button>
                                     </div>
@@ -113,27 +240,14 @@
       <script src="{{ url_for('static', filename='assets/datatables/jquery.data-tables.min.js') }}"></script>
       <script src="{{ url_for('static', filename='assets/datatables/data-tables.bootstrap4.min.js') }}"></script>
       <script src="{{ url_for('static', filename='assets/theme/js/script.js') }}"></script>
-      <script src="{{ url_for('static', filename='assets/formoid/formoid.min.js') }}"></script> 
+      <!-- <script src="{{ url_for('static', filename='assets/formoid/formoid.min.js') }}"></script>  -->
       <script type="text/javascript" id="script">
+                
                 var a=0;
-                function myfunction(e){
-                //alert($(e).attr('id'));
-            $(e).parent().parent().remove();
-            };
-            $("#somebutton").click(function () {
-            $("#container_satya").append('<li id="li'+(++a)+'">\
-                 <div   class="col-md-6">\
-                <input placeholder="Ingredient Name" type="text" name="name'+(a)+'" data-form-field="Name" required="required" \
-                class="form-control display-7" id="name-form2-k" style="width: 80%;display:inline;" >\
-                </div>\
-                <div   class="col-md-6">\
-                <input placeholder="Quantity" type="text" name="qnt'+(a)+'" data-form-field="Name" required="required" \
-                class="form-control display-7" id="name-form2-k" style="width: 80%;display:inline;" >\
-                &nbsp;&nbsp;<button type="button" id="b'+a+'" style="background-color:transparent;border-color:transparent;outline:none;" \
-                onclick="myfunction(this)">&#10006;</button>\
-                </div>\
-                <br>&nbsp;</li>');
-        });
+      function myfunction(e){
+        //alert($(e).attr('id'));
+    $(e).parent().remove();
+   };
          
             
        
