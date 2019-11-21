@@ -3,6 +3,7 @@ from flask_restful import Resource, Api
 from flask_cors import cross_origin, CORS
 import pickle
 import json
+import atexit
 import os
 from werkzeug.utils import secure_filename
 import subprocess
@@ -25,6 +26,11 @@ def menu():
 @app.route("/add_recipe")
 def add_recipe_html():
 	return (render_template("add_recipe.html"))
+
+@app.route("/view_recipe/<id>")
+def view_recipe_by_id(id):
+	id=20482
+	return (render_template("view_recipe.html",id=str(id)))
 
 @app.route("/pf")
 def view_recipe_html():
@@ -85,16 +91,23 @@ class Recipes(Resource):
 		return jsonify({"prob":prob[startIndex:endIndex],"recipes":lis[startIndex:endIndex]})	
 
 
-class RecipesId(Resource):
-	def get(self):
-		args = request.form 
-		id_list = args.getlist("id")
+class RecipesId_initial(Resource):
+	def get(self,id):
+		try:
+			return jsonify(recipes[int(id)])
+		except:
+			return jsonify({})
 
-		answer = []
-		print(recipes)
-		for num in id_list:
-			answer.append(recipes[int(num)])
-		return answer
+class RecipesId_recipe(Resource):
+	def get(self,id):
+		try:
+			d={}
+			with open('static/data/items/'+str(id)+'.json') as f:
+				d = json.load(f)
+				print(d)
+			return jsonify(d)
+		except:
+			return jsonify({})
 
 class getIngredients(Resource):
 	def get(self, match_str):
@@ -139,7 +152,8 @@ def convertBill():
 
 
 api.add_resource(Recipes, '/cookease/recipes/')
-api.add_resource(RecipesId, '/cookease/recipes/id/')
+api.add_resource(RecipesId_initial, '/cookease/recipes/title/id/<id>')
+api.add_resource(RecipesId_recipe, '/cookease/recipes/recipe/id/<id>')
 api.add_resource(getIngredients, '/cookease/ingredient/<match_str>')
 api.add_resource(getCategory, '/cookease/category/<match_str>')
 # api.add_resource(convertBill, '/cookease/bill/')
@@ -151,7 +165,7 @@ api.add_resource(Test, '/')
 
 class GetCuisines(Resource):
 	def get(self):
-		# images are located at ui/assets/images/cuisines/file_name.jpg
+		# images are located at static/assets/images/cuisines/file_name.jpg
 		return jsonify({
 			"Mexican":"Mexican.jpg",
 			"Italian":"Italian.jpg",
@@ -161,9 +175,19 @@ class GetCuisines(Resource):
 		)
 api.add_resource(GetCuisines, '/get_cuisines')
 
+def goodbye():
+	print("saving..")
+	with open("static/data/categorical_ingredients", "wb") as file:
+		pickle.dump(ingredients,file)
+	with open("static/data/id_recipes.pkl", "wb") as file:
+		pickle.dump(recipes,file)
+	print("saved")
+
+
 if __name__ == '__main__':
 	with open("static/data/categorical_ingredients", "rb") as file:
 		ingredients = pickle.load(file)
 	with open("static/data/id_recipes.pkl", "rb") as file:
 		recipes = pickle.load(file)
+	atexit.register(goodbye)
 	app.run(debug=True)
