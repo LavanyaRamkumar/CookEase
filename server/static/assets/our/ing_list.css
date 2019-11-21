@@ -1,0 +1,59 @@
+
+/* -------------------------------------- */
+
+ul {
+    counter-reset: li;
+    list-style-image: url('../images/logo4.png'); 
+    padding: 0;
+    margin-left: 20%;
+    margin-right: 20%;
+    text-shadow: 0 1px 0 rgba(34,34,34,.5);
+}
+
+
+/* -------------------------------------- */            
+
+.rounded-list li {
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em 2em;
+    *padding: .4em;
+    margin: .5em 0;
+    background: #efefef;
+    color: #222;
+    text-decoration: none;
+    -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    border-radius: .3em;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;    
+}
+
+
+/* 
+.rounded-list li:before {
+    content: '';
+    position: absolute;    
+    left: -1.3em;
+    top: 50%;
+    margin-top: -1.3em;
+    background: #bf4c24;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    border: .3em solid #222;
+    text-align: center;
+    font-weight: bold;
+    -moz-border-radius: 2em;
+    -webkit-border-radius: 2em;
+    border-radius: 2em;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+ */
