@@ -3,6 +3,9 @@ from flask_restful import Resource, Api
 from flask_cors import cross_origin, CORS
 import pickle
 import json
+import os
+from werkzeug.utils import secure_filename
+import subprocess
 
 
 
@@ -26,7 +29,6 @@ def add_recipe_html():
 @app.route("/pf")
 def view_recipe_html():
 	return (render_template("pf_msd.html"))
-
 
 @app.route("/groceries")
 def groceries():
@@ -122,11 +124,24 @@ class getCategory(Resource):
 			answer = "Herbs and Spices"
 		return jsonify(answer)
 
+@app.route("/cookease/bill/", methods=['GET', 'POST'])
+def convertBill():
+	if request.method=="POST":
+		bill = request.files['bill']
+		bill.save("./temp.jpg")
+		print("done")
+		return render_template('bill.html')
+
+	else:
+		output = subprocess.check_output("python items.py temp.jpg", shell=True)
+		return jsonify(output.decode("utf-8"))
+
 
 api.add_resource(Recipes, '/cookease/recipes/')
 api.add_resource(RecipesId, '/cookease/recipes/id/')
 api.add_resource(getIngredients, '/cookease/ingredient/<match_str>')
 api.add_resource(getCategory, '/cookease/category/<match_str>')
+# api.add_resource(convertBill, '/cookease/bill/')
 
 class Test(Resource):
 	def get(self):

@@ -23,7 +23,7 @@
 
 .card-deck {
 	margin-top:20px;
-	background: white
+	/*background: white*/
 }
 
 .card-header {
@@ -56,6 +56,10 @@
 	border: none;
 }
 
+#enteredIng {
+	margin-top:20px;
+}
+
 .neg:hover {
 	background: #BBBBBB;
 }
@@ -77,6 +81,13 @@ html, body {
 	overflow: hidden;
 	position: absolute;
 	z-index: -1;
+	transform: scale(1.05);
+}
+
+#upload {
+	position: absolute;
+	right: 10px;
+	top: 10px;
 }
 
 
@@ -239,6 +250,8 @@ html, body {
 		}
 	}
 
+
+
 	
 </script>
 </head>
@@ -247,25 +260,22 @@ html, body {
 <body onload="create()" >
 		<script>HTMLImporter.import("menu.html");</script>
 
-	<img id="background" src="static/assets/images/macaroon.jpg">
-	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="float: right;margin-right: 100px;margin-top: 20px;padding: 6px 12px;height: 34px;">Upload Bill</button>
+	<img id="background" src="static/assets/images/ing_back.jpg">
+	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="upload">Upload Bill</button>
 
 	<div class="container">
 			<div class="modal fade" id="myModal" role="dialog">
 			  <div class="modal-dialog modal-sm">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h4 class="modal-title">Upload Bill to get ingredients</h4>
+					<h4 class="modal-title">Upload Bill</h4>
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 
 				  </div>
-				  <form action="#">
-				  
-					  <div class="modal-body">
-							  <input type="file" name="bill" style="padding: 10px;">
-					  </div>
+				  <form enctype="multipart/form-data" method="POST" id="billsubmit" action="http://localhost:5000/cookease/bill/">
+				  	<input type="file" name="bill" id="bill" style="padding: 10px;">
 					  <div class="modal-footer">
-					  <button type="submit" class="btn btn-default">Get Ingredients</button>
+					  <button type="submit" class="btn btn-info ">Get Ingredients</button>
 					  </div>
 				  </form>
 				  
