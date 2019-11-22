@@ -44,7 +44,7 @@ def add_recipe_html():
 
 @app.route("/view_recipe/<id>")
 def view_recipe_by_id(id):
-	id=20482
+	#id=20482
 	return (render_template("view_recipe.html",id=str(id)))
 
 @app.route("/pf")
