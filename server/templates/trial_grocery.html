@@ -96,6 +96,7 @@ html, body {
 
 <script>
 	ingredients = Array()
+	timer = null
 
 	function toTitleCase(str) {
         return str.replace(
@@ -109,9 +110,9 @@ html, body {
 	var objIngredient = {
 		xhr: new XMLHttpRequest(),
 		get: function() {
-			this.xhr.open("GET", "http://localhost:5000/cookease/ingredient/"+document.getElementById("enteredIng").value, false)
-			this.xhr.onreadystatechange = this.set
-			this.xhr.send()
+			objIngredient.xhr.open("GET", "http://localhost:5000/cookease/ingredient/"+document.getElementById("enteredIng").value, false)
+			objIngredient.xhr.onreadystatechange = objIngredient.set
+			objIngredient.xhr.send()
 		},
 		set: function() {
 			if(this.readyState==4 && this.status==200) {
@@ -204,7 +205,10 @@ html, body {
 			dropdownController.move(-1)
 			return
 		}
-		objIngredient.get()
+		if(timer!=null)
+			clearTimeout(timer)
+		console.log(objIngredient.get)
+		timer = setTimeout(objIngredient.get, 1000)
 	}
 
 	function add(cat, name, force) {
@@ -214,9 +218,7 @@ html, body {
 			return
 		obj[toTitleCase(name)] = cat
 		localStorage.setItem("pantry", 	JSON.stringify(obj))
-		console.log(obj)
 		catDeck = document.getElementById(cat)
-		console.log(cat)
 		newdiv = document.createElement("div")
 		newdiv.className= "holder"
 		title = document.createElement("h5")
@@ -244,16 +246,12 @@ html, body {
 
 	function create() {
 		if(localStorage.getItem("pantry")==null){
-			console.log("empty")
 			localStorage.setItem("pantry", JSON.stringify(new Object()))
 		}
 		else {
-			console.log("not empty")
 			obj = JSON.parse(localStorage.getItem("pantry"))
 			objkeys = Object.keys(obj)
-			console.log(objkeys.length)
 			for (var i = objkeys.length - 1; i >= 0; i--) {
-				console.log("create",obj[objkeys[i]]+"  "+objkeys[i])
 				add(obj[objkeys[i]], objkeys[i], true)
 			}
 		}
