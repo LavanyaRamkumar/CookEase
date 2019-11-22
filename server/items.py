@@ -2,44 +2,46 @@ from tesserocr import PyTessBaseAPI
 import pickle
 import sys
 import numpy as np
+import time
 
 
-image = sys.argv[1]
+def doall():
+    image = "./static/temp/temp.jpg"#sys.argv[1]
 
-with PyTessBaseAPI() as api:
-    api.SetImageFile(image)
-    text = api.GetUTF8Text()
+    with PyTessBaseAPI() as api:
+        api.SetImageFile(image)
+        text = api.GetUTF8Text()
 
-# print(text)
+    # print(text)
 
-ingredients = pickle.load(open("./static/data/ingredients", "rb"))
+    ingredients = pickle.load(open("./static/data/ingredients", "rb"))
 
-def levenshtein(seq1, seq2):
-    size_x = len(seq1) + 1
-    size_y = len(seq2) + 1
-    matrix = np.zeros ((size_x, size_y))
-    for x in range(size_x):
-        matrix [x, 0] = x
-    for y in range(size_y):
-        matrix [0, y] = y
+    def levenshtein(seq1, seq2):
+        size_x = len(seq1) + 1
+        size_y = len(seq2) + 1
+        matrix = np.zeros ((size_x, size_y))
+        for x in range(size_x):
+            matrix [x, 0] = x
+        for y in range(size_y):
+            matrix [0, y] = y
 
-    for x in range(1, size_x):
-        for y in range(1, size_y):
-            if seq1[x-1] == seq2[y-1]:
-                matrix [x,y] = min(
-                    matrix[x-1, y] + 1,
-                    matrix[x-1, y-1],
-                    matrix[x, y-1] + 1
-                )
-            else:
-                matrix [x,y] = min(
-                    matrix[x-1,y] + 1,
-                    matrix[x-1,y-1] + 1,
-                    matrix[x,y-1] + 1
-                )
-    return (matrix[size_x - 1, size_y - 1])
+        for x in range(1, size_x):
+            for y in range(1, size_y):
+                if seq1[x-1] == seq2[y-1]:
+                    matrix [x,y] = min(
+                        matrix[x-1, y] + 1,
+                        matrix[x-1, y-1],
+                        matrix[x, y-1] + 1
+                    )
+                else:
+                    matrix [x,y] = min(
+                        matrix[x-1,y] + 1,
+                        matrix[x-1,y-1] + 1,
+                        matrix[x,y-1] + 1
+                    )
+        return (matrix[size_x - 1, size_y - 1])
 
-def get_items(text):
+    # def get_items(text):
     def match(word, ingredient):
         i = 0
         j = 0
@@ -58,7 +60,7 @@ def get_items(text):
         if i==len(word) and j==len(ingredient):
             return True
     def check_words(line):
-        return "total" not in line and "card" not in line and "change" not in line
+        return "total" not in line and "card" not in line and "change" not in line and "order" not in line and "pouch" not in line
     def convert(line):
         line = line.lower()
         for a in ".,-$'%:[]()*&^#@!":
@@ -68,8 +70,12 @@ def get_items(text):
     text = [line for line in text if line.isdigit()==False and check_words(line)==True]
     
     items = []
+    total_len = len(text)
+    counter = 0
+    yield str(total_len)+"\n"
     for line in text:
-        words = [word for word in line.split(" ") if len(word)>3]
+        counter+=1
+        words = [word for wordbeta in line.split(" ") for word in wordbeta.split("/") if len(word)>3]
         combos = []
         for a in range(len(words)):
             for b in range(a, len(words)):
@@ -92,10 +98,17 @@ def get_items(text):
                         min_dist = dist
                         answer = ingredient
         if answer!=False:
+            yield answer+"\t"+str(counter)+"\n"
+            time.sleep(0.01)
+            # print(answer)
             items.append(answer)
-    return items       
+        else:
+            yield ""+"\t"+str(counter)+"\n"
+    return ""
+        # return items    
+    # get_items(text)   
                     
-items = [item for item in get_items(text) if item!=""]
+# items = [item for item in get_items(text) if item!=""]
 # print("-"*30)
-for item in items:
-    print(item)
+# for item in items:
+#     print(item)
