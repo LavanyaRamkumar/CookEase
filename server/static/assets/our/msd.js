@@ -10,11 +10,12 @@ function get_cuisines(){
     if(this.readyState == 4 && this.status == 200) {
         var res = JSON.parse(this.responseText);
         var listing = document.getElementById("cuidiv");
-        
+        console.log(res)
         for (x in res){
             var spl=[x,res[x]];
             console.log(spl)
             var lnk = "/c/"+spl[0]
+            console.log(lnk)
             var card_init='<div class="card col-12 col-md-6 col-lg-3"> <div class="icon-block"  style="height:112px; width:315px;"><a href='+lnk+' id="'
             var card_mid_1='"></a></div><h5 class="mbr-fonts-style display-5" style="height:112px; width:315px;">'
             var card_end='<br></h5></div>'
