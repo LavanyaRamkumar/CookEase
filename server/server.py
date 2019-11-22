@@ -78,6 +78,7 @@ def add_recipe_html():
 		file.save('./static/data/food_images/'+str(new_recipe_id)+'.jpg')
 		#id=20482
 		return (render_template("view_recipe.html",id=str(new_recipe_id)))
+		# return (redirect("http://localhost:5000/view_recipe/"+str(new_recipe_id),200))
 
 
 @app.route("/view_recipe/<id>")

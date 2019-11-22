@@ -157,7 +157,7 @@
         obj[e.target.name]=e.target.value
         localStorage.setItem("filled_form", JSON.stringify(obj))
 
-        console.log(obj)
+        // console.log(obj)
     }
     function store_ing(e){
         // alert(e.target.name+e.target.value)
@@ -168,7 +168,7 @@
         // console.log(obj)
     }
     function store_img(e){
-        alert(e.target.value);
+        // alert(e.target.value);
     }
     function create() {
             if(localStorage.getItem("filled_form")==null){
@@ -336,11 +336,11 @@
 
             });
         var obj = JSON.parse(localStorage.getItem("filled_form"))
-        console.log(html_value)
-        console.log(obj["ingredients"])
+        // console.log(html_value)
+        // console.log(obj["ingredients"])
         delete obj["ingredients"][(html_value)];
         localStorage.setItem("filled_form", JSON.stringify(obj))
-        console.log(ingredients)
+        // console.log(ingredients)
         
     $(e).parent().remove();
    };
@@ -362,7 +362,8 @@
                 // init["image"]=""
                 // init["image_name"]=""
                 localStorage.setItem("filled_form", JSON.stringify(init))
-                document.getElementById("add_rec_form").submit();
+                console.log("here")
+                // document.getElementById("add_rec_form").submit();
                 return true;
         });
   

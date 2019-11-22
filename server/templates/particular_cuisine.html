@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="../static/assets/mobirise/css/mbr-additional.css" type="text/css">
   <link rel="stylesheet" href="../static/assets/our/cards.css" type="text/css">
   <script src="../static/assets/our/import.js"></script>
-  <script src="assets/our/msd.js" ></script> 	
+  <!-- <script src="assets/our/msd.js" ></script> 	 -->
   <style>
       .background-pizza {
         -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
@@ -167,7 +167,7 @@
 	</head>
 	<body onload="getChunk()">
 		
-		<!--<script>HTMLImporter.import("menu.html");</script>-->
+			<script>HTMLImporter.import("http://127.0.0.1:5000/menu.html");</script>
 		
 		<!--<select name="cuisine" id="cuisine" onchange="getRecipe()">
 			<option value="" selected>No Filter</option>
@@ -190,17 +190,22 @@
 	
 
 		<div id="content">
-		<section class="features3 cid-rFOI6kDI7L" id="features3-d">
-
-			<div class="col-md-2  form-group" data-for="name"  >
-        		<label for="cuisine" class="form-control-label mbr-fonts-style display-7">Type</label>
-				<select class="form-control display-7" name="type"  id="type11" onchange="getRecipe()" align="right">
-					<option value="" selected>No Filter</option>
-  					<option value="appetisers">Appetisers</option>
-  					<option value="mains">Main</option>
-  					<option value="desserts">Dessert</option>
-				</select>
-			</div>
+				<section class=" features3 cid-rFOI6kDI7L" id="features3-d" style="padding-top: 20px;">
+				<div class="col-md-2" style="margin-right: 10%;float:right;">
+						<label class=" mbr-fonts-style display-7">Type</label>
+						<select class=" form-control display-7" name="type"  id="type11" onchange="getRecipe()">
+							<option value="" selected>No Filter</option>
+							  <option value="appetisers">Appetisers</option>
+							  <option value="mains">Main</option>
+							  <option value="desserts">Dessert</option>
+						</select>
+					</div>
+				</section>
+		<section class="features3 cid-rFOI6kDI7L" id="features3-d" style="padding-top: 60px;">
+			<!-- <div class="col-md-6 form-group" data-for="name"  style="margin-right: 0px;">
+					
+				</div> -->
+			
 			<div id="pics">
 
 			</div>
