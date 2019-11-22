@@ -42,6 +42,7 @@
 
       </style>
      <script>
+         
           var a=0;
          ingredients = Array()
 
@@ -92,8 +93,11 @@
                 newa.onclick=function(e){
                     // alert(e.target.innerHTML);
                     if(!ingredients.includes(e.target.innerHTML)){
-                        $("#container_satya").append('<li id="li'+(++a)+'"><label for="title" class="form-control-label mbr-fonts-style display-7">'+e.target.innerHTML+'&nbsp;&nbsp;</label><input type="text" name="'+e.target.name+'" data-form-field="Name" required="required" class="form-control display-7" id="name-form2-k" style="width: 60%;display:inline;" placeholder="Quantity/Description of Ingredient" >&nbsp;&nbsp;<button type="button" id="b'+a+'" style="background-color:transparent;border-color:transparent;outline:none;" onclick="myfunction(this)">&#10006;</button><br>&nbsp;</li>');
+                        $("#container_satya").append('<li id="li'+(++a)+'"><label for="title" class="form-control-label mbr-fonts-style display-7">'+e.target.innerHTML+'&nbsp;&nbsp;</label><input type="text" name="'+e.target.name+'" data-form-field="Name" required="required" class="form-control display-7" id="'+e.target.name+'" style="width: 60%;display:inline;" onkeyup="store_ing(event)" placeholder="Quantity/Description of Ingredient" >&nbsp;&nbsp;<button type="button" id="b'+a+'" style="background-color:transparent;border-color:transparent;outline:none;" onclick="myfunction(this)">&#10006;</button><br>&nbsp;</li>');
                         ingredients.push(e.target.innerHTML);
+                        var obj = JSON.parse(localStorage.getItem("filled_form"))
+                        obj["ingredients"][(e.target.innerHTML).toLowerCase()]=""
+                        localStorage.setItem("filled_form", JSON.stringify(obj))
                     }
                     document.getElementById("enteredIng").value=""
                     dropdownController.hide()
@@ -121,11 +125,18 @@
 		}
 	}
      function getVal(e) {
-         alert(e.key)
+        //  alert(e.key)
 		if(e.key=="Enter") {
-            alert(e)
+            // alert(e)
             theval = e.target.value
-            alert(theval)
+            // alert(theval)
+            if(!ingredients.includes(e.target.value)){
+                $("#container_satya").append('<li id="li'+(++a)+'"><label for="title" class="form-control-label mbr-fonts-style display-7">'+e.target.value+'&nbsp;&nbsp;</label><input type="text" name="'+(e.target.value).toLowerCase()+'" data-form-field="Name" required="required" class="form-control display-7" id="'+(e.target.value).toLowerCase()+'" style="width: 60%;display:inline;"  onkeyup="store_ing(event)" placeholder="Quantity/Description of Ingredient" >&nbsp;&nbsp;<button type="button" id="b'+a+'" style="background-color:transparent;border-color:transparent;outline:none;" onclick="myfunction(this)">&#10006;</button><br>&nbsp;</li>');
+                ingredients.push(e.target.value);
+                var obj = JSON.parse(localStorage.getItem("filled_form"))
+                obj["ingredients"][(e.target.value).toLowerCase()]=""
+                localStorage.setItem("filled_form", JSON.stringify(obj))
+            }
 			e.target.value=""
 			dropdownController.hide()
 			// return true
@@ -140,13 +151,82 @@
 		}
 		objIngredient.get()
     }
+    function store(e){
+        // alert(e.target.name+e.target.value)
+        var obj = JSON.parse(localStorage.getItem("filled_form"))
+        obj[e.target.name]=e.target.value
+        localStorage.setItem("filled_form", JSON.stringify(obj))
+
+        console.log(obj)
+    }
+    function store_ing(e){
+        // alert(e.target.name+e.target.value)
+        var obj = JSON.parse(localStorage.getItem("filled_form"))
+        obj["ingredients"][e.target.name]=e.target.value;
+        localStorage.setItem("filled_form", JSON.stringify(obj))
+
+        // console.log(obj)
+    }
+    function store_img(e){
+        alert(e.target.value);
+    }
+    function create() {
+            if(localStorage.getItem("filled_form")==null){
+                console.log("empty")
+                var init = {};
+                init["name"]=""
+                init["cuisine"]="Indian"
+                init["type"]="mains"
+                init["ingredients"]={}
+                init["recipe"]=""
+                // init["image"]=""
+                // init["image_name"]=""
+                localStorage.setItem("filled_form", JSON.stringify(init))
+            }
+            else {
+                console.log("not empty")
+                var obj = JSON.parse(localStorage.getItem("filled_form"))
+                console.log(obj)
+                document.getElementById("id_name").value=obj["name"]
+                document.getElementById("id_cuisine").value=obj["cuisine"]
+                document.getElementById("id_type").value=obj["type"]
+                document.getElementById("id_recipe").value=obj["recipe"]
+                // document.getElementById("file").value=obj["image_name"]
+                for (var ing in obj["ingredients"]){
+                    console.log(ing)
+                    $("#container_satya").append('<li id="li'+(++a)+'"><label for="title" class="form-control-label mbr-fonts-style display-7">'+toTitleCase(ing)+'&nbsp;&nbsp;</label><input type="text" name="'+ing+'" data-form-field="Name" required="required" class="form-control display-7" id="'+ing+'" style="width: 60%;display:inline;"  onkeyup="store_ing(event)" placeholder="Quantity/Description of Ingredient" value="'+obj["ingredients"][ing]+'">&nbsp;&nbsp;<button type="button" id="b'+a+'" style="background-color:transparent;border-color:transparent;outline:none;" onclick="myfunction(this)">&#10006;</button><br>&nbsp;</li>');
+                    ingredients.push(ing);
+                }
+                
+            }
+        
+		
+	}
+    function clear_form(){
+        var init = {};
+        init["name"]=""
+        init["cuisine"]="Indian"
+        init["type"]="mains"
+        init["ingredients"]={}
+        init["recipe"]=""
+        // init["image"]=""
+        // init["image_name"]=""
+        localStorage.setItem("filled_form", JSON.stringify(init))
+        ingredients=Array()
+        document.getElementById("id_name").value=""
+        document.getElementById("id_cuisine").value="Indian"
+        document.getElementById("id_type").value="mains"
+        document.getElementById("id_recipe").value=""
+        document.getElementById("file").value=""
+        $("#container_satya").innerHTML=""
+    }
      </script>
 
       
       
       
     </head>
-    <body>
+    <body onload="create()">
             
         <script>HTMLImporter.import("http://127.0.0.1:5000/menu.html");</script>
         <section class="mbr-section form1 cid-rFQbzQn7HE" id="form1-o">
@@ -178,15 +258,15 @@
             
                                     <div class="col-md-6  form-group" data-for="name">
                                         <label for="title" class="form-control-label mbr-fonts-style display-7">Name of the Dish</label>
-                                        <input type="text" name="name" data-form-field="Name" required="required" class="form-control display-7" id="title">
+                                        <input type="text" name="name" data-form-field="Name" required="required" class="form-control display-7" id="id_name" onkeyup="store(event)" placeholder="Dish">
                                     </div>
                                     <div data-for="message" class="col-md-6 form-group">
                                         <label for="file" class="form-control-label mbr-fonts-style display-7">Upload Image</label>
-                                        <input type="file" accept=".jpg" name="file" data-form-field="File" class="form-control display-7" id="file-form1-k" required="required">
+                                        <input type="file" accept=".jpg" name="file" data-form-field="File" class="form-control display-7" id="file" required="required" onchange="store_img(event)">
                                     </div>
                                     <div class="col-md-6  form-group" data-for="name">
                                         <label for="cuisine" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
-                                        <select class="form-control display-7" name="cuisine">
+                                        <select class="form-control display-7" name="cuisine" onchange="store(event)" id="id_cuisine">
                                           <option value="Indian">Indian</option>
                                           <option value="Italian">Italian</option>
                                           <option value="Mexican">Mexican</option>
@@ -195,7 +275,7 @@
                                     </div>
                                     <div class="col-md-6  form-group" data-for="name">
                                         <label for="type" class="form-control-label mbr-fonts-style display-7">Type</label>
-                                        <select class="form-control display-7" name="type">
+                                        <select class="form-control display-7" name="type" onchange="store(event)" id="id_type">
                                             <!-- {'desserts', 'appetisers', 'mains'} -->
                                             <option value="mains">Main</option>
                                             <option value="appetisers">Appetiser</option>
@@ -203,8 +283,8 @@
                                         </select>
                                     </div>
                                     <div data-for="message" class="col-md-12 form-group">
-                                            Add Ingredients : &nbsp;&nbsp;&nbsp;<br>
-                                            <input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)"> 
+                                            Ingredients : &nbsp;&nbsp;&nbsp;<br>
+                                            <input class="form-control" id="enteredIng" type="text" placeholder="Search/Add Ingredients" style="display:inline" onkeyup="getVal(event)"> 
                                             <div class="form-group row" style="position:absolute; z-index:3; right:0; left:0">
                                                     <div id="dropdown" class="col-md-12" style="margin:auto;display: none;position:absolute;width: 100%;">
                                                     </div>
@@ -214,11 +294,12 @@
                                         <div data-for="message" class="col-md-12 form-group">
                                         <ul id="container_satya"></ul></div>
                                         
-                                    <div data-for="message" class="col-md-12 form-group">
+                                    <div data-for="recipe" class="col-md-12 form-group">
                                         <label for="message-form1-k" class="form-control-label mbr-fonts-style display-7">Recipe</label>
-                                        <textarea name="message" data-form-field="Message" class="form-control display-7" id="message-form1-k"></textarea>
+                                        <textarea name="recipe" data-form-field="Message" class="form-control display-7" id="id_recipe" placeholder="Recipe" onkeyup="store(event)"></textarea>
                                     </div>
                                     <div class="col-md-12 input-group-btn align-center">
+                                        <button type="button" class="btn btn-link display-4" onclick="clear_form()" >Reset Form</button>
                                         <button type="submit" class="btn btn-primary btn-form display-4">UPLOAD RECIPE</button>
                                     </div>
                                 </div>
@@ -246,11 +327,44 @@
                 var a=0;
       function myfunction(e){
         //alert($(e).attr('id'));
+        // console.log(e.previousSibling.previousSibling.name)
+        // console.log(ingredients)
+        var html_value=e.previousSibling.previousSibling.name
+        ingredients = ingredients.filter(function(value, index, arr){
+
+            return value.toLowerCase() != html_value;
+
+            });
+        var obj = JSON.parse(localStorage.getItem("filled_form"))
+        console.log(html_value)
+        console.log(obj["ingredients"])
+        delete obj["ingredients"][(html_value)];
+        localStorage.setItem("filled_form", JSON.stringify(obj))
+        console.log(ingredients)
+        
     $(e).parent().remove();
    };
          
             
-       
+   $('form input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        $('#add_rec_form').submit(function() {
+            var init = {};
+                init["name"]=""
+                init["cuisine"]="Indian"
+                init["type"]="mains"
+                init["ingredients"]={}
+                init["recipe"]=""
+                // init["image"]=""
+                // init["image_name"]=""
+                localStorage.setItem("filled_form", JSON.stringify(init))
+                document.getElementById("add_rec_form").submit();
+                return true;
+        });
   
      </script>
     </body>

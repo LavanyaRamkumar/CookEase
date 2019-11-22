@@ -36,16 +36,53 @@ def add_recipe_html():
 		# return jsonify(recipes)
 		return (render_template("add_recipe.html"))
 	else:
-		print(request.form)
+		global new_recipe_id
+		global ingredients
+		global recipes		
+		#Other
+		# new_recipe_id
+		# {'cuisine': ['Indian'], 'name': ['sa'], 'recipe': ['sa\r\nbh'], 'type': ['mains'], 'sausage': ['sa']}
+		# {'cuisine': 'Mexican', 'ingredients': ['vegetable oil', 'cumin', 'lime', 'chili powder', 'salt', 'corn tortillas'], 'type': 'appetisers', 'title': 'Baked Tortilla Chips'}
+		form_data=dict(request.form)
+		print(form_data)
+		form_recipe=form_data['recipe'][0].splitlines()
+		form_recipe=[i for i in form_recipe if i]
+		form_data.pop('recipe')
+		add_data_to_recipe={}
+		add_data_to_recipe['cuisine']=form_data['cuisine'][0]
+		form_data.pop('cuisine')
+		add_data_to_recipe['type']=form_data['type'][0]
+		form_data.pop('type')
+		add_data_to_recipe['title']=form_data['name'][0]
+		form_data.pop('name')
+		for k in form_data.keys():
+			value=k+" - "+form_data[k][0]
+			form_data[k]=value
+			found=0
+			for ing in ingredients.values():
+				if(k in ing):
+					found=1
+			if(found==0):
+				ingredients['Other'].append(k)
+		ing_list=list(form_data.values())
+		add_data_to_recipe['ingredients']=list(form_data.keys())
+		sample={"ingredients":ing_list,"recipe":form_recipe}
+		new_recipe_id+=1
+		print("new id :",new_recipe_id)
+		print("new recipe :",sample)
+		print("new recipe pickle :",add_data_to_recipe)
+		recipes[new_recipe_id]=add_data_to_recipe
+		with open('./static/data/items/'+str(new_recipe_id)+'.json', 'w') as fp:
+			json.dump(sample, fp)
 		file = request.files['file']
-		file.save("./static/data/food_images/temp.jpg")
-		id=20482
-		return (render_template("view_recipe.html",id=str(id)))
+		file.save('./static/data/food_images/'+str(new_recipe_id)+'.jpg')
+		#id=20482
+		return (render_template("view_recipe.html",id=str(new_recipe_id)))
 
 
 @app.route("/view_recipe/<id>")
 def view_recipe_by_id(id):
-	id=20482
+	#id=20482
 	return (render_template("view_recipe.html",id=str(id)))
 
 @app.route("/pf")
@@ -210,5 +247,6 @@ if __name__ == '__main__':
 		ingredients = pickle.load(file)
 	with open("static/data/id_recipes.pkl", "rb") as file:
 		recipes = pickle.load(file)
+	new_recipe_id=(max(recipes.keys()))+1
 	atexit.register(goodbye)
 	app.run(debug=True)
