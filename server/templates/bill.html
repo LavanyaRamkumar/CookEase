@@ -92,7 +92,7 @@
 #background {
 	width: 100vw;
 	height: 100vh;
-	-webkit-filter: blur(11px);
+	/* -webkit-filter: blur(11px); */
 	overflow: hidden;
 	position: absolute;
 	z-index: -1;
@@ -212,12 +212,16 @@
 		holder.parentElement.removeChild(holder)
 	}
 		setTimeout(billsubmit, 50)
+
+	function getImg() {
+		document.getElementById("bill").src = "../../static/temp/temp.jpg?"+Date.now()
+	}
 	</script>
 </head>
-<body>
+<body onload="getImg()">
 
 <img id="background" src="../../static/assets/images/ing_back.jpg">
-<img id="bill" src="../../static/temp/temp.jpg"><div class="card mb-3">  
+<img id="bill"><div class="card mb-3">  
 
 <div class="card-header" style="background-color: white; display:inline">
 
