@@ -213,30 +213,7 @@ html, body {
 		timer = setTimeout(objIngredient.get, 1000)
 	}
 
-	function add(cat, name, force) {
-		// ingredients.append(Array(cat, name))
-		obj = JSON.parse(localStorage.getItem("pantry"))
-		if(obj[toTitleCase(name)]!=null && force==null)
-			return
-		obj[toTitleCase(name)] = cat
-		localStorage.setItem("pantry", 	JSON.stringify(obj))
-		catDeck = document.getElementById(cat)
-		newdiv = document.createElement("div")
-		newdiv.className= "holder"
-		title = document.createElement("h5")
-		title.className = "card-title "
-		title.innerHTML = toTitleCase(name)
-		negButton = document.createElement("img")
-		negButton.className = "neg"
-		negButton.src = "./static/assets/images/close.jpg"
-		negButton.onclick = remove
 
-		newdiv.appendChild(title)
-		newdiv.appendChild(negButton)
-
-		catDeck.appendChild(newdiv)
-
-	}
 
 	function remove(e) {
 		holder = e.target.parentElement
@@ -246,22 +223,7 @@ html, body {
 		holder.parentElement.removeChild(holder)
 	}
 
-	function create() {
-		console.log("hhh")
-		if(localStorage.getItem("pantry")==null){
-			localStorage.setItem("pantry", JSON.stringify(new Object()))
-			console.log("hii")
-		}
-		else {
-			obj = JSON.parse(localStorage.getItem("pantry"))
-			console.log(obj)
-			objkeys = Object.keys(obj)
-			console.log(objkeys)
-			for (var i = objkeys.length - 1; i >= 0; i--) {
-				add(obj[objkeys[i]], objkeys[i], true)
-			}
-		}
-	}
+
 
 
 
