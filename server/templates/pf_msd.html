@@ -125,7 +125,7 @@
 
 
 
-					var ele = document.getElementById("features3-d").innerHTML+=data;
+					var ele = document.getElementById("pics").innerHTML+=data;
 
 					setTimeout(loadImg,1000,res,count);
 							
@@ -145,7 +145,7 @@
 			}
 
 			function getRecipe(){
-				var o = document.getElementById("features3-d");
+				var o = document.getElementById("pics");
 				var child = o.lastElementChild;  
         		while (child) { 
             		o.removeChild(child); 
@@ -160,27 +160,35 @@
 	</head>
 	<body onload="getChunk()">
 		
-
-		<select name="cuisine" id="cuisine" onchange="getRecipe()">
-			<option value="" selected>No Filter</option>
-  			<option value="Mexican">Mexican</option>
-  			<option value="Italian">Italian</option>
-  			<option value="Indian">Indian</option>
-  			<option value="Thai">Thai</option>
-		</select>
-
-		<select name="type"  id="type" onchange="getRecipe()">
-			<option value="" selected>No Filter</option>
-  			<option value="appetisers">Appetisers</option>
-  			<option value="mains">Main</option>
-  			<option value="desserts">Dessert</option>
-		</select>
+	
 
 		<div id="content">
 		<section class="features3 cid-rFOI6kDI7L" id="features3-d">
+			<div class="col-md-2  form-group" data-for="name"  >
+        		<label for="cuisine" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
+				<select class="form-control display-7" name="cuisine" id="cuisine" onchange="getRecipe()">
+					<option value="" selected>No Filter</option>
+  					<option value="Mexican">Mexican</option>
+  					<option value="Italian">Italian</option>
+  					<option value="Indian">Indian</option>
+  					<option value="Thai">Thai</option>
+				</select>
+			</div>
 
+			<div class="col-md-2  form-group" data-for="name"  >
+        		<label for="cuisine" class="form-control-label mbr-fonts-style display-7">Type</label>
+				<select  class="form-control display-7" name="type" id="type" onchange="getRecipe()">
+					<option value="" selected>No Filter</option>
+  					<option value="appetisers">Appetisers</option>
+  					<option value="mains">Main</option>
+  					<option value="desserts">Dessert</option>
+				</select>
+			</div>
 
-			</section>
-		</div>
+			<div id="pics">
+
+			</div>
+		</section>
+	</div>
 	</body>
 </html>
