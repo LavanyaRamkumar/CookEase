@@ -60,7 +60,7 @@ def doall():
         if i==len(word) and j==len(ingredient):
             return True
     def check_words(line):
-        return "total" not in line and "card" not in line and "change" not in line
+        return "total" not in line and "card" not in line and "change" not in line and "order" not in line and "pouch" not in line
     def convert(line):
         line = line.lower()
         for a in ".,-$'%:[]()*&^#@!":
@@ -75,7 +75,7 @@ def doall():
     yield str(total_len)+"\n"
     for line in text:
         counter+=1
-        words = [word for word in line.split(" ") if len(word)>3]
+        words = [word for wordbeta in line.split(" ") for word in wordbeta.split("/") if len(word)>3]
         combos = []
         for a in range(len(words)):
             for b in range(a, len(words)):

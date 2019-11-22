@@ -38,7 +38,7 @@ def add_recipe_html():
 	else:
 		global new_recipe_id
 		global ingredients
-		global recipes		
+		# global recipes		
 		#Other
 		# new_recipe_id
 		# {'cuisine': ['Indian'], 'name': ['sa'], 'recipe': ['sa\r\nbh'], 'type': ['mains'], 'sausage': ['sa']}
