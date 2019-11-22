@@ -20,8 +20,8 @@
   <link rel="stylesheet" href="../static/assets/theme/css/style.css">
   <link rel="stylesheet" href="../static/assets/mobirise/css/mbr-additional.css" type="text/css">
   <link rel="stylesheet" href="../static/assets/our/cards.css" type="text/css">
-  <!--<script src="assets/our/import.js"></script> 
-  <script src="assets/our/msd.js" ></script> -->
+  <script src="../static/assets/our/import.js"></script> 
+  <!-- <script src="assets/our/msd.js" ></script> -->
   <style>
       .background-pizza {
         -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
@@ -165,10 +165,33 @@
 	<body onload="getChunk()">
 		
 	
+			<script>HTMLImporter.import("http://127.0.0.1:5000/menu.html");</script>
 
 		<div id="content">
-		<section class="features3 cid-rFOI6kDI7L" id="features3-d">
-			<div class="col-md-2  form-group" data-for="name"  >
+			<section class=" features3 cid-rFOI6kDI7L" style="padding-top: 20px;">
+					<div class="col-md-2  form-group" data-for="name"  style="margin-right: 10%;float:right;">
+							<label for="cuisine" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
+							<select class="form-control display-7" name="cuisine" id="cuisine" onchange="getRecipe()">
+								<option value="" selected>No Filter</option>
+								  <option value="Mexican">Mexican</option>
+								  <option value="Italian">Italian</option>
+								  <option value="Indian">Indian</option>
+								  <option value="Thai">Thai</option>
+							</select>
+						</div>
+					<div class="col-md-2" style="margin-right: 2%;float:right;">
+							<label class=" mbr-fonts-style display-7">Type</label>
+							<select class=" form-control display-7" name="type"  id="type" onchange="getRecipe()">
+								<option value="" selected>No Filter</option>
+									<option value="appetisers">Appetisers</option>
+									<option value="mains">Main</option>
+									<option value="desserts">Dessert</option>
+							</select>
+						</div>
+						
+					</section>
+		<section class="features3 cid-rFOI6kDI7L" id="features3-d" style="padding-top: 60px;">
+			<!-- <div class="col-md-2  form-group" data-for="name"  >
         		<label for="cuisine" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
 				<select class="form-control display-7" name="cuisine" id="cuisine" onchange="getRecipe()">
 					<option value="" selected>No Filter</option>
@@ -187,7 +210,7 @@
   					<option value="mains">Main</option>
   					<option value="desserts">Dessert</option>
 				</select>
-			</div>
+			</div> -->
 
 			<div id="pics">
 

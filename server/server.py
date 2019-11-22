@@ -78,6 +78,7 @@ def add_recipe_html():
 		file.save('./static/data/food_images/'+str(new_recipe_id)+'.jpg')
 		#id=20482
 		return (render_template("view_recipe.html",id=str(new_recipe_id)))
+		# return (redirect("http://localhost:5000/view_recipe/"+str(new_recipe_id),200))
 
 
 @app.route("/view_recipe/<id>")
@@ -97,6 +98,10 @@ def c(cuisine):
 def groceries():
 	return (render_template("trial_grocery.html"))
 
+@app.route("/search")
+def search():
+	return (render_template("search.html"))
+
 def match(recipe, pantry):
 	total = len(recipe["ingredients"])
 	available = 0
@@ -104,6 +109,22 @@ def match(recipe, pantry):
 		if ingredient in pantry:
 			available+=1
 	return available/total
+
+@app.route("/get_recipes_titles/<match_str>")
+def recipe_titles(match_str):
+	lis = {}
+	for i in recipes.keys():
+		lis[i] = recipes[i]["title"]
+	print(lis)
+	match_str = match_str.lower()
+	answers = {}
+	for reci in lis.keys():
+		print(lis[reci][:len(match_str)])
+		if(match_str == lis[reci][:len(match_str)].lower()):
+			answers[reci] = lis[reci]
+	return (answers)
+
+
 
 
 
@@ -168,6 +189,8 @@ class RecipesId_recipe(Resource):
 
 class getIngredients(Resource):
 	def get(self, match_str):
+
+		print(ingredients)
 		ing_types = ingredients.keys()
 		print(ing_types)
 		match_str = match_str.lower()
@@ -247,6 +270,7 @@ if __name__ == '__main__':
 		ingredients = pickle.load(file)
 	with open("static/data/id_recipes.pkl", "rb") as file:
 		recipes = pickle.load(file)
+		#print(recipes)
 	new_recipe_id=(max(recipes.keys()))+1
 	atexit.register(goodbye)
 	app.run(debug=True)

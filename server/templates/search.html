@@ -110,13 +110,13 @@ html, body {
 	var objIngredient = {
 		xhr: new XMLHttpRequest(),
 		get: function() {
-			objIngredient.xhr.open("GET", "http://localhost:5000/cookease/ingredient/"+document.getElementById("enteredIng").value, false)
+			objIngredient.xhr.open("GET", "http://localhost:5000/get_recipes_titles/"+document.getElementById("enteredIng").value, false)
 			objIngredient.xhr.onreadystatechange = objIngredient.set
 			objIngredient.xhr.send()
 		},
 		set: function() {
 			if(this.readyState==4 && this.status==200) {
-				dropdownController.show(JSON.parse(this.response).slice(0, 10))
+				dropdownController.show(JSON.parse(this.response))
 			}
 		}
 	}
@@ -153,12 +153,14 @@ html, body {
 			this.pos = arr.length
 			this.val = document.getElementById("enteredIng").value
 
-			for (var i = arr.length - 1; i >= 0; i--) {
+			for (var i in arr) {
 				newa = document.createElement("a")
 				newa.innerHTML = arr[i]
 				newa.className = "dropdown-item"
 				// newa.onclick = "click_ing("+arr[i]+")"
-				newa.href="#"
+				link = "/view_recipe/"+i
+				console.log(link)
+				newa.href=link
 				dropdown.appendChild(newa)
 			}
 
@@ -207,7 +209,7 @@ html, body {
 		}
 		if(timer!=null)
 			clearTimeout(timer)
-		console.log(objIngredient.get)
+		//console.log(objIngredient.get)
 		timer = setTimeout(objIngredient.get, 1000)
 	}
 
@@ -245,12 +247,16 @@ html, body {
 	}
 
 	function create() {
+		console.log("hhh")
 		if(localStorage.getItem("pantry")==null){
 			localStorage.setItem("pantry", JSON.stringify(new Object()))
+			console.log("hii")
 		}
 		else {
 			obj = JSON.parse(localStorage.getItem("pantry"))
+			console.log(obj)
 			objkeys = Object.keys(obj)
+			console.log(objkeys)
 			for (var i = objkeys.length - 1; i >= 0; i--) {
 				add(obj[objkeys[i]], objkeys[i], true)
 			}
@@ -264,37 +270,18 @@ html, body {
 </head>
 
 
-<body onload="create()" >
-		<script>HTMLImporter.import("http://127.0.0.1:5000/menu.html");</script>
+<body  >
+		<script>HTMLImporter.import("menu.html");</script>
 
 	<img id="background" src="static/assets/images/ing_back.jpg">
-	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="upload">Upload Bill</button>
+	
 
-	<div class="container">
-			<div class="modal fade" id="myModal" role="dialog">
-			  <div class="modal-dialog modal-sm">
-				<div class="modal-content">
-				  <div class="modal-header">
-					<h4 class="modal-title">Upload Bill</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-
-				  </div>
-				  <form enctype="multipart/form-data" method="POST" id="billsubmit" action="http://localhost:5000/cookease/bill/">
-				  	<input type="file" name="bill" id="bill" style="padding: 10px;">
-					  <div class="modal-footer">
-					  <button type="submit" class="btn btn-info ">Get Ingredients</button>
-					  </div>
-				  </form>
-				  
-				</div>
-			  </div>
-			</div>
-		  </div>	
+	
 
 <div class="form-group row">
 
   <div class="col-xs-5" style="margin:auto;">
-	<input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)"> 
+	<input class="form-control" id="enteredIng" type="text" placeholder="Recipe" style="display:inline" onkeyup="getVal(event)"> 
 	
 
   </div>
@@ -307,38 +294,6 @@ html, body {
 </div>
 </div>
 
-<div class="card-deck wrapper " style="margin-right:10px; margin-left:10px">
-<div class="card mb-3">
-  <div class="card-header" style="background-color: white">Fruits and Vegetables</div>
-  <div class="card-body" id="Fruits and Vegetables">
-  	<img class="card-img-top" src="/static/assets/images/fv.jpg" alt="Card image cap" >
-    </div>
-</div>
-<div class="card mb-3">
-  <div class="card-header" style="background-color: white">Herbs and Spices</div>
-  <div class="card-body" id="Herbs and Spices">
-  	<img class="card-img-top" src="/static/assets/images/hs.jpg" alt="Card image cap">
-    </div>
-</div>
-<div class="card mb-3">
-  <div class="card-header" style="background-color: white">Staples</div>
-  <div class="card-body" id="Staple">
-  	<img class="card-img-top" src="/static/assets/images/stap.jpg" alt="Card image cap">
-  </div>
-</div>
-<div class="card mb-3">
-  <div class="card-header" style="background-color: white">Protein</div>
-  <div class="card-body" id="Protein">
-  	<img class="card-img-top" src="/static/assets/images/protein.jpeg" alt="Card image cap">
-  </div>
-</div>
-<div class="card mb-3">
-  <div class="card-header" style="background-color: white">Others</div>
-  <div class="card-body" id="Other">
-  	<img class="card-img-top" src="/static/assets/images/choc.jpeg" alt="Card image cap" style="display:block">
-  </div>
-</div>
 
-</div>
 </body>
 </html>
