@@ -55,14 +55,19 @@
 			scrollAmt=500;
 			count=0;
 			function getChunk(){
+				console.log("count:"+count)
 				scroll=document.body.scrollTop||document.documentElement.scrollTop;
 				if(scroll>scrollAmt || count == 0){
 					scrollAmt=scroll;
 					xhr.onreadystatechange=showChunk;
+					var drop = document.getElementById("cuisine");
+  					cuisine = drop.options[drop.selectedIndex].value;
+  					var drop1 = document.getElementById("type");
+  					type = drop1.options[drop1.selectedIndex].value;
 					xhr.open("POST","http://127.0.0.1:5000/cookease/recipes/",true);
 					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 					ings = Object.keys(JSON.parse(localStorage.getItem("pantry")))
-					parameters = "type=&cuisine=&count="+count++
+					parameters = "type="+type+"&cuisine="+cuisine+"&count="+count++
 					for (var i = 0; i < ings.length; i++) {
 						parameters+="&Ingredients="
 						parameters+=ings[i]
@@ -138,10 +143,39 @@
 				}
 				window.onscroll=getChunk;
 			}
+
+			function getRecipe(){
+				var o = document.getElementById("features3-d");
+				var child = o.lastElementChild;  
+        		while (child) { 
+            		o.removeChild(child); 
+            		child = o.lastElementChild; 
+        		}
+        		console.log("inside get recipe")
+        		count = 0
+				getChunk()
+			}
 			
 		</script>
 	</head>
 	<body onload="getChunk()">
+		
+
+		<select name="cuisine" id="cuisine" onchange="getRecipe()">
+			<option value="" selected>No Filter</option>
+  			<option value="Mexican">Mexican</option>
+  			<option value="Italian">Italian</option>
+  			<option value="Indian">Indian</option>
+  			<option value="Thai">Thai</option>
+		</select>
+
+		<select name="type"  id="type" onchange="getRecipe()">
+			<option value="" selected>No Filter</option>
+  			<option value="appetisers">Appetisers</option>
+  			<option value="mains">Main</option>
+  			<option value="desserts">Dessert</option>
+		</select>
+
 		<div id="content">
 		<section class="features3 cid-rFOI6kDI7L" id="features3-d">
 
