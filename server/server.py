@@ -7,6 +7,7 @@ import atexit
 import os
 from werkzeug.utils import secure_filename
 import subprocess
+from items import doall
 
 
 
@@ -202,8 +203,8 @@ def convertBill():
 		return render_template('bill.html')
 
 	else:
-
-		output = subprocess.check_output("python3 items.py ./static/temp/temp.jpg", shell=True)
+		return Response(stream_with_context(doall()))
+		# output = subprocess.check_output("python3 items.py ./static/temp/temp.jpg", shell=True)
 		return output.decode("utf-8")
 
 
