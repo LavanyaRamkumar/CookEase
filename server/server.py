@@ -115,11 +115,11 @@ def recipe_titles(match_str):
 	lis = {}
 	for i in recipes.keys():
 		lis[i] = recipes[i]["title"]
-	print(lis)
+	# print(lis)
 	match_str = match_str.lower()
 	answers = {}
 	for reci in lis.keys():
-		print(lis[reci][:len(match_str)])
+		# print(lis[reci][:len(match_str)])
 		if(match_str == lis[reci][:len(match_str)].lower()):
 			answers[reci] = lis[reci]
 	return (answers)
