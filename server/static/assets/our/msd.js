@@ -10,12 +10,14 @@ function get_cuisines(){
     if(this.readyState == 4 && this.status == 200) {
         var res = JSON.parse(this.responseText);
         var listing = document.getElementById("cuidiv");
-        var card_init='<div class="card col-12 col-md-6 col-lg-3"> <div class="icon-block"  style="height:112px; width:315px;"><a href="listing.html" id="'
-        var card_mid_1='"></a></div><h5 class="mbr-fonts-style display-5" style="height:112px; width:315px;">'
-        var card_end='<br></h5></div>'
+        
         for (x in res){
             var spl=[x,res[x]];
             console.log(spl)
+            var lnk = "/c/"+spl[0]
+            var card_init='<div class="card col-12 col-md-6 col-lg-3"> <div class="icon-block"  style="height:112px; width:315px;"><a href='+lnk+' id="'
+            var card_mid_1='"></a></div><h5 class="mbr-fonts-style display-5" style="height:112px; width:315px;">'
+            var card_end='<br></h5></div>'
             var content=card_init+spl[0]+card_mid_1+spl[0]+card_end;
             listing.innerHTML+=content;
             setTimeout(get_cuisines_images,1000,spl[0],spl[1]);
