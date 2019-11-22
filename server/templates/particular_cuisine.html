@@ -20,8 +20,8 @@
   <link rel="stylesheet" href="../static/assets/theme/css/style.css">
   <link rel="stylesheet" href="../static/assets/mobirise/css/mbr-additional.css" type="text/css">
   <link rel="stylesheet" href="../static/assets/our/cards.css" type="text/css">
-  <!--<script src="assets/our/import.js"></script> 
-  <script src="assets/our/msd.js" ></script> -->
+  <script src="../static/assets/our/import.js"></script>
+  <script src="assets/our/msd.js" ></script> 
   <style>
       .background-pizza {
         -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
@@ -62,7 +62,8 @@
 					xhr.onreadystatechange=showChunk;
   					cuisine = "{{data}}"
   					console.log("cuisine"+cuisine)
-  					var drop1 = document.getElementById("type");
+  					var drop1 = document.getElementById("type11");
+  					console.log(drop1)
   					type = drop1.options[drop1.selectedIndex].value;
 					xhr.open("POST","http://127.0.0.1:5000/cookease/recipes/",true);
 					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
@@ -98,7 +99,7 @@
 						recid = prob[i][1]
 						recprob = prob[i][0]*100
 						probtext = '<div class="progress">  <div class="progress-bar" role="progressbar" aria-valuenow="40"  aria-valuemin="0" aria-valuemax="100" style="width:'+recprob+'%">    '+Math.round(recprob)+'% Ingredients  </div></div>'
-						data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src=""  style="width:338;height:190;" alt='+item+' id='+id+'> </div> <div class="card-box"> <h4 class="card-title mbr-fonts-style display-7">'+item+probtext+'</h4> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b>'+ingred+'</p> </div> </div> </div>'
+						data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src=""  style="width:338;height:190;" alt='+item+' id='+id+'> </div> <div class="card-box"> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b>'+ingred+'</p> </div> </div> </div>'
 
 					}
 					data+="</div></div>"
@@ -118,14 +119,14 @@
 						recid = prob[i][1]
 						recprob = prob[i][0]*100
 						probtext = '<div class="progress">  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"  aria-valuemin="0" aria-valuemax="100" style="width:'+recprob+'%">    '+Math.round(recprob)+'% Ingredients  </div></div>'
-						data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src="" style="width:338;height:190;" alt='+item+' id='+id+'> </div> <div class="card-box"> <h4 class="card-title mbr-fonts-style display-7">'+item+probtext+'</h4> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b>'+ingred+'</p> </div> </div> </div>'
+						data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src="" style="width:338;height:190;" alt='+item+' id='+id+'> </div> <div class="card-box"> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b>'+ingred+'</p> </div> </div> </div>'
 
 					}
 					data+="</div></div>"
 
 
 
-					var ele = document.getElementById("features3-d").innerHTML+=data;
+					var ele = document.getElementById("pics").innerHTML+=data;
 
 					setTimeout(loadImg,1000,res,count);
 							
@@ -145,7 +146,7 @@
 			}
 
 			function getRecipe(){
-				var o = document.getElementById("features3-d");
+				var o = document.getElementById("pics");
 				var child = o.lastElementChild;  
         		while (child) { 
             		o.removeChild(child); 
@@ -160,7 +161,8 @@
 	</head>
 	<body onload="getChunk()">
 		
-
+		<!--<script>HTMLImporter.import("menu.html");</script>-->
+		
 		<!--<select name="cuisine" id="cuisine" onchange="getRecipe()">
 			<option value="" selected>No Filter</option>
   			<option value="Mexican">Mexican</option>
@@ -169,17 +171,33 @@
   			<option value="Thai">Thai</option>
 		</select>
 	-->
-
-		<select name="type"  id="type" onchange="getRecipe()">
-			<option value="" selected>No Filter</option>
-  			<option value="appetisers">Appetisers</option>
-  			<option value="mains">Main</option>
-  			<option value="desserts">Dessert</option>
-		</select>
+	<!--<<div class="col-md-6  form-group" data-for="name">
+                                        <label for="cuisine" class="form-control-label mbr-fonts-style display-7">Cuisine</label>
+                                        <select class="form-control display-7" name="cuisine">
+                                          <option value="Indian">Indian</option>
+                                          <option value="Italian">Italian</option>
+                                          <option value="Mexican">Mexican</option>
+                                          <option value="Thai">Thai</option>
+                                        </select>
+                                    </div>
+                                -->
+	
 
 		<div id="content">
 		<section class="features3 cid-rFOI6kDI7L" id="features3-d">
 
+			<div class="col-md-2  form-group" data-for="name"  >
+        		<label for="cuisine" class="form-control-label mbr-fonts-style display-7">Type</label>
+				<select class="form-control display-7" name="type"  id="type11" onchange="getRecipe()" align="right">
+					<option value="" selected>No Filter</option>
+  					<option value="appetisers">Appetisers</option>
+  					<option value="mains">Main</option>
+  					<option value="desserts">Dessert</option>
+				</select>
+			</div>
+			<div id="pics">
+
+			</div>
 
 			</section>
 		</div>

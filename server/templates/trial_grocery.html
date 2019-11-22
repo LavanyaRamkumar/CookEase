@@ -28,7 +28,7 @@
 
 .card-header {
 	font-size:1.3em;
-	font-family: "Montserrat"
+	font-family: "Montserrat";
 	background: white !important;
 }
 
@@ -156,6 +156,7 @@ html, body {
 				newa = document.createElement("a")
 				newa.innerHTML = arr[i]
 				newa.className = "dropdown-item"
+				// newa.onclick = "click_ing("+arr[i]+")"
 				newa.href="#"
 				dropdown.appendChild(newa)
 			}
@@ -179,6 +180,14 @@ html, body {
 		}
 	}
 
+	// function click_ing(e){
+	// 	theval = e
+	// 	var a=document.getElementById("enteredIng")
+	// 	a.value=""
+	// 	dropdownController.hide()
+	// 	objCategory.get(theval)
+	// 	return
+	// }
 	function getVal(e) {
 		if(e.key=="Enter") {
 			theval = e.target.value
