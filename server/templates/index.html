@@ -11,6 +11,7 @@
   
   <title>Home</title>
   <link rel="stylesheet" href="static/assets/web/assets/mobirise-icons/mobirise-icons.css">
+  <link rel="stylesheet" href="static/assets/mobirise/css/mbr-additional.css" type="text/css">
   <link rel="stylesheet" href="static/assets/tether/tether.min.css">
   <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap-grid.min.css">
@@ -18,7 +19,6 @@
   <link rel="stylesheet" href="static/assets/datatables/data-tables.bootstrap4.min.css">
   <link rel="stylesheet" href="static/assets/socicon/css/styles.css">
   <link rel="stylesheet" href="static/assets/theme/css/style.css">
-  <link rel="stylesheet" href="static/assets/mobirise/css/mbr-additional.css" type="text/css">
   <link rel="stylesheet" href="static/assets/our/cards.css" type="text/css">
   <script src="static/assets/our/import.js"></script> 
   <script src="static/assets/our/msd.js" ></script> 
@@ -32,7 +32,27 @@
         height:96px;
         object-fit:cover;
          border-radius:50%;
+         border: solid white;
       }
+      .cuisine-images-css:hover {
+        width: 116px;
+        height: 116px;
+        position: relative;
+        bottom: 10px;
+      }
+      #background {
+  width: 100vw;
+  height: 100vh;
+  -webkit-filter: blur(8px);
+  overflow: hidden;
+  position: fixed;
+  z-index: -1;
+  transform: scale(1.1);
+  box-shadow: inset 0 0 100px black;
+}
+
+
+
   </style>
   
   
@@ -41,15 +61,17 @@
 <body  onload="getChunk()">
          
     <script>HTMLImporter.import("menu.html");</script>
+    <button type="button" class="btn btn-info" style="position:absolute; z-index:100; right:10px; background-color: #17a2b8 !important; top:10px; border: none" data-toggle="modal" data-target="#myModal" id="ingredients" onclick="location.href='http://localhost:5000/groceries'">Pantry</button>
     
 
-  <section class="header12 cid-rFOHxKroP0 mbr-fullscreen mbr-parallax-background" id="header12-9">
+  <section class="header12 cid-rFOHxKroP0 mbr-fullscreen mbr-parallax-background" id="header12-9" style="background-image: url('../../../static/assets/images/saladf.jpg')">
+
+    <img src='./static/assets/images/backgroundorange.jpg' id="background">
          
         
             
 
-    <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(35, 35, 35);">
-    </div>
+    
     
     <div class="container  ">
         
@@ -120,7 +142,7 @@
         </a>
     </div>
 </section>
-<section class="cid-rFOHxKroP0" style="background-image: url('');" id="cuisines-list">
+<section class="cid-rFOHxKroP0" style="background-image: url('backgroundorange.jpg');" id="cuisines-list">
     <!-- <div class="container">
         <br>
         <h5 class="mbr-section-title pb-3 mbr-black mbr-bold mbr-fonts-style display-2 align-center">
