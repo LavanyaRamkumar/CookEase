@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/our/menu.css') }}" type="text/css">
+
+</head>
+<body bgcolor="transparent">
+
+<div id="mySidenav" class="sidenav" onmouseleave="closeNav()">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <button id="groceries" onclick="location.href='http://localhost:5000/';">Home</button>
+  <button id="groceries" onclick="location.href='http://localhost:5000/groceries';">My Pantry</button>
+  <button id="groceries" onclick="location.href='http://localhost:5000/pf';">Recommendations</button>
+  <button id="groceries" onclick="location.href='http://localhost:5000/add_recipe';">Add Recipe</button>
+  
+</div>
+
+
+<span style="font-size:30px;cursor:pointer" onmouseover="openNav()" onclick="openNav()" id="threebar">&#9776;</span>
+
+   
+</body>
+</html> 

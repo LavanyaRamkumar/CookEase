@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html  >
+<head>
+    <!-- {'Mexican': 735, 'Indian': 382, 'Italian': 913, 'Thai': 113} -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v4.10.5, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="static/assets/images/logo4.png" type="image/x-icon">
+  <meta name="description" content="">
+  
+  <title>Home</title>
+  <link rel="stylesheet" href="static/assets/web/assets/mobirise-icons/mobirise-icons.css">
+  <link rel="stylesheet" href="static/assets/mobirise/css/mbr-additional.css" type="text/css">
+  <link rel="stylesheet" href="static/assets/tether/tether.min.css">
+  <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="static/assets/datatables/data-tables.bootstrap4.min.css">
+  <link rel="stylesheet" href="static/assets/socicon/css/styles.css">
+  <link rel="stylesheet" href="static/assets/theme/css/style.css">
+  <link rel="stylesheet" href="static/assets/our/cards.css" type="text/css">
+  <script src="static/assets/our/import.js"></script> 
+  <script src="static/assets/our/msd.js" ></script> 
+  <style>
+      .background-pizza {
+        /* -webkit-filter: blur(5px); 
+  filter: blur(5px); */
+  
+      }
+      .cuisine-images-css{
+        width: 96px;
+        height:96px;
+        object-fit:cover;
+         border-radius:50%;
+         border: solid white;
+      }
+      .cuisine-images-css:hover {
+        width: 116px;
+        height: 116px;
+        position: relative;
+        bottom: 10px;
+      }
+      #background {
+  width: 100vw;
+  height: 100vh;
+  /* -webkit-filter: blur(8px); */
+  overflow: hidden;
+  position: fixed;
+  z-index: -1;
+  transform: scale(1.1);
+  box-shadow: inset 0 0 100px black;
+}
+
+
+
+  </style>
+
+  <script>
+  ingredients = Array()
+  timer = null
+
+  function toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
+  var objIngredient = {
+    xhr: new XMLHttpRequest(),
+    get: function() {
+      objIngredient.xhr.open("GET", "http://localhost:5000/get_recipes_titles/"+document.getElementById("enteredIng").value, false)
+      objIngredient.xhr.onreadystatechange = objIngredient.set
+      objIngredient.xhr.send()
+    },
+    set: function() {
+      if(this.readyState==4 && this.status==200) {
+        dropdownController.show(JSON.parse(this.response))
+      }
+    }
+  }
+
+  var objCategory = {
+    xhr: new XMLHttpRequest(),
+    matchStr: "",
+    get: function(matchStr) {
+      this.matchStr = matchStr
+      this.xhr.open("GET", "http://localhost:5000/cookease/category/"+matchStr, false)
+      this.xhr.onreadystatechange = this.set
+      this.xhr.send()
+    },
+    set: function() {
+      if(this.readyState==4 && this.status==200) {
+        add(JSON.parse(this.response), objCategory.matchStr)
+      }
+    }
+  }
+
+  var dropdownController = {
+    pos: 0,
+    len: 0,
+    hide: function() {
+      dropdown = document.getElementById("dropdown")
+      dropdown.style.display = "none"
+      dropdown.innerHTML = ""
+    },
+    show: function(arr) {
+      dropdown = document.getElementById("dropdown")
+      dropdown.style.display = "block"
+      dropdown.innerHTML = ""
+      this.len = arr.length
+      this.pos = arr.length
+      this.val = document.getElementById("enteredIng").value
+
+      for (var i in arr) {
+        newa = document.createElement("a")
+        newa.innerHTML = arr[i]
+        newa.className = "dropdown-item"
+        // newa.onclick = "click_ing("+arr[i]+")"
+        link = "/view_recipe/"+i
+        console.log(link)
+        newa.href=link
+        dropdown.appendChild(newa)
+      }
+
+    },
+
+    move: function(num) {
+      dropdown = document.getElementById("dropdown")
+      if(this.pos!=this.len)
+        dropdown.childNodes[this.pos].className = "dropdown-item"
+      this.pos = (this.pos+num)%(this.len+1)
+      if(this.pos<0)
+        this.pos+=(this.len+1)
+      if(this.pos!=this.len){
+        dropdown.childNodes[this.pos].className = "dropdown-item active"
+        document.getElementById("enteredIng").value = dropdown.childNodes[this.pos].innerHTML
+      }
+      else {
+        document.getElementById("enteredIng").value = this.val  
+      }
+    }
+  }
+
+  // function click_ing(e){
+  //  theval = e
+  //  var a=document.getElementById("enteredIng")
+  //  a.value=""
+  //  dropdownController.hide()
+  //  objCategory.get(theval)
+  //  return
+  // }
+  function getVal(e) {
+    if(e.key=="Enter") {
+      theval = e.target.value
+      e.target.value=""
+      dropdownController.hide()
+      objCategory.get(theval)
+      return
+    }
+    if(e.key=="ArrowDown") {
+      dropdownController.move(1)
+      return
+    }
+    if(e.key=="ArrowUp") {
+      dropdownController.move(-1)
+      return
+    }
+    if(timer!=null)
+      clearTimeout(timer)
+    //console.log(objIngredient.get)
+    timer = setTimeout(objIngredient.get, 1000)
+  }
+
+
+
+  function remove(e) {
+    holder = e.target.parentElement
+    obj = JSON.parse(localStorage.getItem("pantry"))
+    delete obj[holder.childNodes[0].innerHTML]
+    localStorage.setItem("pantry",  JSON.stringify(obj))
+    holder.parentElement.removeChild(holder)
+  }
+
+
+
+
+
+  
+</script>
+  
+  
+  
+</head>
+<body  onload="getChunk()">
+         
+    <script>HTMLImporter.import("http://127.0.0.1:5000/menu.html");</script>
+    <button type="button" class="btn btn-info" style="position:absolute; z-index:100; right:10px; background-color: #17a2b8 !important; top:10px; border: none" data-toggle="modal" data-target="#myModal" id="ingredients" onclick="location.href='http://localhost:5000/groceries'">Pantry</button>
+    
+
+  <section class="header12 cid-rFOHxKroP0 mbr-fullscreen mbr-parallax-background" id="header12-9" style="background-image: url('../../../static/assets/images/saladf.jpg')">
+
+    <img src='./static/assets/images/backgroundorange.jpg' id="background">
+         
+        
+            
+
+    
+    
+    <div class="container  ">
+        
+            <div class="media-container">
+                    
+                <div class="col-md-12 align-center">
+                    <h1 class="mbr-section-title pb-3 mbr-white mbr-bold mbr-fonts-style display-1">
+                        <img src="static/assets/images/logo4.png" height="80px" width="80px"> CookEase
+                    </h1>
+                    <p class="mbr-text pb-3 mbr-white mbr-fonts-style display-5">
+                        Simple ingredients prepared in a simple way - that's the best way to take your everyday cooking to a higher level.
+                    </p>
+                    <!-- <div class="mbr-section-btn align-center py-2">
+                        <a class="btn btn-md btn-secondary display-4" href="#">MORE</a>
+                    </div> -->
+
+                    <!-- <div class="icons-media-container mbr-white">
+                        <div class="card col-12 col-md-6 col-lg-3">
+                            <div class="icon-block">
+                            <a href="groceries">
+                                <span class="mbr-iconfont mbri-cart-add"></span>
+                            </a>
+                            </div>
+                            <h5 class="mbr-fonts-style display-5">
+                                My Grocery<br></h5>
+                        </div>
+
+                        <div class="card col-12 col-md-6 col-lg-3">
+                            <div class="icon-block">
+                                <a href="#">
+                                    <span class="mbr-iconfont mbri-preview"></span>
+                                </a>
+                            </div>
+                            <h5 class="mbr-fonts-style display-5">
+                                Scan</h5>
+                        </div>
+
+                        <div class="card col-12 col-md-6 col-lg-3">
+                            <div class="icon-block">
+                                <a href="#">
+                                    <span class="mbr-iconfont mbri-laptop"></span>
+                                </a>
+                            </div>
+                            <h5 class="mbr-fonts-style display-5">
+                                .....</h5>
+                        </div>
+
+                        <div class="card col-12 col-md-6 col-lg-3">
+                            <div class="icon-block">
+                                <a href="#">
+                                    <span class="mbr-iconfont mbri-extension"></span>
+                                </a>
+                            </div>
+                            <h5 class="mbr-fonts-style display-5">
+                                .....</h5>
+                        </div>
+                    </div> -->
+                    <div class="icons-media-container mbr-white  align-center " id ="cuidiv">
+                        
+                    </div>
+
+
+                </div>
+            </div>
+    </div>
+
+    <div class="mbr-arrow hidden-sm-down" aria-hidden="true">
+        <a href="#next">
+            <i class="mbri-down mbr-iconfont"></i>
+        </a>
+    </div>
+</section>
+
+    <!-- <div class="container">
+        <br>
+        <h5 class="mbr-section-title pb-3 mbr-black mbr-bold mbr-fonts-style display-2 align-center">
+                Cuisines
+        </h5>
+        
+    </div> -->
+    <!-- <div class="media-container icons-media-container " style="color: #ff6633;float:right;position: fixed;top: 0;right:0;z-index: 100;">
+            <div class="icon-block" >
+            <a href="groceries">
+                <span class="mbr-iconfont mbri-cart-add"></span>
+                
+            </a>
+            </div>
+     </div>  -->
+   
+
+  <div class="col-md-6" style="margin-left:25% ;" >
+  <input class="form-control" id="enteredIng" type="text" placeholder="Search Recipe" style="display:inline;" onkeyup="getVal(event)"> 
+  
+
+  </div>
+
+<section class="cid-rFOHxKroP0" style="background-image: url('backgroundorange.jpg');width: 680px;margin-left:26%">
+
+
+<div class="form-group row" style="margin-left:25% ;margin-right: 25%;">
+<!-- <div id="dropdown" class="col-xs-3" style="margin:auto;display: none;" style="position:absolute; margin-right: 20px;margin-left: 20px"> -->
+        <div id="dropdown" class="col-xs-3">
+</div>
+</div>
+     <!-- <button type="button" class="btn btn-info" style="position:absolute; z-index:100; right:5px; background-color: #17a2b8 !important; top:10px; border: none" data-toggle="modal" data-target="#myModal" id="ingredients" onclick="location.href='http://localhost:5000/pf'">My Recommendations</button> -->
+
+    </section>
+
+
+
+<section class="team1 cid-rFOJ0RCWFn" id="team1-l">
+    
+    
+    
+    <div class="container align-center">
+        <h2 class="pb-3 mbr-fonts-style mbr-section-title display-2">
+            OUR AWESOME TEAM
+        </h2>
+        <h3 class="pb-5 mbr-section-subtitle mbr-fonts-style mbr-light display-7"></h3>
+        <div class="row media-row">
+            
+        <div class="team-item col-lg-3 col-md-6">
+                <div class="item-image">
+                    <img src="static/assets/images/face1.jpg" alt="" title="">
+                </div>
+                <div class="item-caption py-3">
+                    <div class="item-name px-2">
+                        <p class="mbr-fonts-style display-5">
+                           Kavya Varma</p>
+                    </div>
+                    <div class="item-role px-2">
+                        <p>01FB16ES162</p>
+                    </div>
+                </div>
+            </div><div class="team-item col-lg-3 col-md-6">
+                <div class="item-image">
+                    <img src="static/assets/images/face2.jpg" alt="" title="">
+                </div>
+                <div class="item-caption py-3">
+                    <div class="item-name px-2">
+                        <p class="mbr-fonts-style display-5">
+                           G Satyabhama Reddy</p>
+                    </div>
+                    <div class="item-role px-2">
+                        <p>01FB16ECS124</p>
+                    </div>
+                    
+                </div>
+            </div><div class="team-item col-lg-3 col-md-6">
+                <div class="item-image">
+                    <img src="static/assets/images/face3.jpg" alt="" title="">
+                </div>
+                <div class="item-caption py-3">
+                    <div class="item-name px-2">
+                        <p class="mbr-fonts-style display-5">
+                           Lavanya Ramkumar</p>
+                    </div>
+                    <div class="item-role px-2">
+                        <p>01FB16ECS179</p>
+                    </div>
+                    
+                </div>
+            </div></div>    
+    </div>
+</section>
+
+
+
+<section once="footers" class="cid-rFQbHkj9FU" id="footer6-q">
+
+    
+
+    
+
+    <div class="container">
+        <div class="media-container-row align-center " >
+            <div class="col-12">
+                <p class="mbr-text mb-0 mbr-fonts-style display-7">
+                    © Copyright 2019 CookEase - All Rights Reserved
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+  <script src="static/assets/web/assets/jquery/jquery.min.js"></script>
+  <script src="static/assets/popper/popper.min.js"></script>
+  <script src="static/assets/tether/tether.min.js"></script>
+  <script src="static/assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="static/assets/smoothscroll/smooth-scroll.js"></script>
+  <script src="static/assets/vimeoplayer/jquery.mb.vimeo_player.js"></script>
+  <script src="static/assets/parallax/jarallax.min.js"></script>
+  <script src="static/assets/datatables/jquery.data-tables.min.js"></script>
+  <script src="static/assets/datatables/data-tables.bootstrap4.min.js"></script>
+  <script src="static/assets/theme/js/script.js"></script>
+  <script src="static/assets/formoid/formoid.min.js"></script> 
+  <!-- <script>
+        $("#about-us").click(function() {
+      $('html,body').animate({
+          scrollTop: $("#team1-l").offset().top},
+          'slow');
+  });	
+</script> -->
+<script>
+        // xhr=new XMLHttpRequest();
+        // scrollAmt=500;
+        // count=0;
+        // function getChunk(){
+        //     scroll=document.body.scrollTop||document.documentElement.scrollTop;
+        //     if(scroll>scrollAmt || count == 0){
+        //         scrollAmt=scroll;
+        //         xhr.onreadystatechange=showChunk;
+        //         xhr.open("POST","http://127.0.0.1:5000/cookease/recipes/",true);
+        //         xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+        //         xhr.send("type=&cuisine=&Ingredients=&count="+count++)
+        //     }
+        // }
+        // function showChunk(){
+        //     console.log(xhr.status)
+        //     if(xhr.readyState==4 && xhr.status==200){
+        //         jsn = JSON.parse(xhr.responseText)
+
+        //         res = jsn["recipes"]
+        //         console.log(res)
+                
+        //         data = '<div class="container"><div class="media-container-row">'
+        //         for (var i=0;i<3;i++){
+        //             item = res[i]["title"]
+        //             it = (res[i]["ingredients"]).toString()
+        //             ingred=it.slice(0,100)+' ...'
+        //             /*key = res[i]["key"]
+        //             img = "/static/data/food_images/"+key+".jpg"
+        //             */
+        //             id = count+"."+i
+        //             /*data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src="'+img+'"  id='+id+'> </div> <div class="card-box"> <h4 class="card-title mbr-fonts-style display-7">'+item+'</h4> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b>'+ingred+'</p> </div> </div> </div>'
+        //             */
+        //             data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src=""  width="338" height="190" id='+id+'> </div> <div class="card-box"> <h4 class="card-title mbr-fonts-style display-7">'+item+'</h4> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b><br>'+ingred+'</p> </div> </div> </div>'
+        //         }
+        //         data+="</div></div>"
+
+        //         data += '<div class="container"><div class="media-container-row">'
+
+        //         for (var i=3;i<6;i++){
+        //             item = res[i]["title"]
+        //             ingred = (res[i]["ingredients"]).slice(0,10)+' ...'
+        //             /*key = res[i]["key"]
+        //             img = "/static/data/food_images/"+key+".jpg"
+        //             */
+        //             id = count+"."+i
+        //             /*data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src="'+img+'"  id='+id+'> </div> <div class="card-box"> <h4 class="card-title mbr-fonts-style display-7">'+item+'</h4> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b>'+ingred+'</p> </div> </div> </div>'
+        //             */
+        //             data += ' <div class="card p-3 col-12 col-md-6 col-lg-4"> <div class="card-wrapper our-cards"> <div class="card-img"> <img src=""  width="338" height="190" id='+id+'> </div> <div class="card-box"> <h4 class="card-title mbr-fonts-style display-7">'+item+'</h4> <p class="mbr-text mbr-fonts-style display-7"> <b>Ingredients used: </b><br>'+ingred+'</p> </div> </div> </div>'
+        //         }
+        //         data+="</div></div>"
+
+
+
+        //         var ele = document.getElementById("features3-d").innerHTML+=data;
+
+        //         setTimeout(loadImg,5000,res,count);
+                        
+            
+        //     }
+            
+        
+        // }
+        // function loadImg(res,count){
+        //     for (var i=0;i<6;i++){
+        //         id = count+"."+i
+        //         key = res[i]["key"]
+        //         document.getElementById(id).src = "/static/data/food_images/"+key+".jpg"
+
+        //     }
+        //     window.onscroll=getChunk;
+        // }
+        
+    </script>
+</body>
+</html>

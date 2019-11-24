@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html  style=" overflow-x: hidden;max-width: 100%;">
+<head>
+    <!-- {'Mexican': 735, 'Indian': 382, 'Italian': 913, 'Thai': 113} -->
+  <!-- Site made with Mobirise Website Builder v4.10.5, #m -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v4.10.5, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logo4.png') }}" type="image/x-icon">
+  <meta name="description" content="">
+  
+  <title>Recipe</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/web/assets/mobirise-icons/mobirise-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/tether/tether.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap-grid.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap-reboot.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/datatables/data-tables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/socicon/css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/theme/css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/mobirise/css/mbr-additional.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/our/cards.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/our/ing_list.css') }}" type="text/css">
+  <script src="{{ url_for('static', filename='assets/our/import.js') }}"></script> 
+  <style>
+      .background-pizza {
+        -webkit-filter: blur(5px); 
+  filter: blur(5px);
+      }
+      .cuisine-images-css{
+        width: 96px;
+        height:96px;
+        object-fit:cover;
+         border-radius:50%;
+      }
+      .column {
+  float: left;
+  width: 50%;
+  min-height: 500px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+} 
+  </style>
+  <script>
+      var xhr = new XMLHttpRequest();
+      function get_title(){
+              
+        xhr.onreadystatechange=showChunk;
+        xhr.open("GET","http://127.0.0.1:5000/cookease/recipes/title/id/"+{{ id }},true);
+        xhr.send()
+
+      }
+      function showChunk(){
+        console.log(xhr.status)
+        if(xhr.readyState==4 && xhr.status==200){
+            var jsn = JSON.parse(xhr.responseText)
+            var cuisine=jsn["cuisine"]
+            // var ingredients=jsn["ingredients"]
+            var title=jsn["title"]
+            var type=jsn["type"]
+            type=type.charAt(0).toUpperCase() + type.slice(1)
+            
+            document.getElementById("re_title").innerHTML=title;
+            document.getElementById("re_cuisine").innerHTML=cuisine;
+            document.getElementById("re_type").innerHTML=type;
+            setTimeout(get_recipe,500);
+        }
+      }
+      function get_recipe(){
+        xhr.onreadystatechange=show_recipe;
+        xhr.open("GET","http://127.0.0.1:5000/cookease/recipes/recipe/id/"+{{ id }},true);
+        xhr.send()
+
+    }
+    function show_recipe(){
+        console.log(xhr.status)
+        if(xhr.readyState==4 && xhr.status==200){
+            var jsn = JSON.parse(xhr.responseText)
+            var recipe=jsn["recipe"]
+            var ingredients=jsn["ingredients"]
+            
+            var ing=document.getElementById("ingredients_loading")
+            for(i in ingredients){
+                ing.innerHTML+="<li>"+ingredients[i]+"</li>"
+            }
+            var rec=document.getElementById("steps_for_recipe")
+            for(i in recipe){
+                if(i!=recipe.length-1){
+                    var bod='<div class="card separline pb-4"><div class="step-element d-flex"><div class="step-wrapper pr-3"><h3 class="step d-flex align-items-center justify-content-center">'
+                    bod=bod.concat((parseInt(i)+1).toString(),"</h3></div><div class=\"step-text-content\" ><p class=\"mbr-step-text mbr-fonts-style display-7\">") 
+                    bod=bod.concat(recipe[i],"</p></div></div></div>") ;
+                }
+                else{
+                    var bod='<div class="card pb-4"><div class="step-element d-flex"><div class="step-wrapper pr-3"><h3 class="step d-flex align-items-center justify-content-center">'
+                    bod=bod.concat((parseInt(i)+1).toString(),"</h3></div><div class=\"step-text-content\"><p class=\"mbr-step-text mbr-fonts-style display-7\">") 
+                    bod=bod.concat(recipe[i],"</p></div></div></div>") ;
+                }
+                rec.innerHTML+=bod;
+            }
+
+                    
+                        
+                        
+                        
+            setTimeout(loadImg,500);
+        }
+    }
+    function loadImg(){
+        document.getElementById("image_for_recipe").src = "/static/data/food_images/"+{{ id }}+".jpg"
+
+    }
+  </script>
+  
+  
+</head>
+<body onload="get_title()" style=" overflow-x: hidden;max-width: 100%;">
+        
+    <script>HTMLImporter.import("http://127.0.0.1:5000/menu.html");</script>
+<section class="mbr-section content6 cid-rFOHQaz78Z" id="content6-b">
+    
+        <h2 class="mbr-section-title pb-3 mbr-fonts-style align-center display-2" id="re_title">
+                
+            </h2>
+    
+    <div class="container">
+        <div class="media-container-row">
+            <div class="col-20 col-md-8">
+                <div class="media-container-row">
+                    <div class="mbr-figure" style="width: 100%;">
+                      <img src="" width="338" height="190" id="image_for_recipe">  
+                    </div>
+                    <div class="media-content">
+                        <div class="mbr-section-text">
+                            <p class="mbr-text mb-0 mbr-fonts-style display-5">
+                               <br>
+                               <strong>Cuisine : </strong><span id="re_cuisine"></span><br><br>
+                               <strong>Type : </strong><span id="re_type"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="row">
+        
+        <div class="column">
+      
+<section class="step1 cid-rFOIAs7Wml" id="step1-i" style="padding-top:0px;">
+
+    <div class="container">
+        <h2 class="mbr-section-title pb-3 mbr-fonts-style align-center display-2">
+            Ingredients
+        </h2>
+        <ul class="rounded-list " id="ingredients_loading">
+        </ul>
+    </div>
+</section>
+</div>
+<div class="column">
+<section class="step1 cid-rFOIAs7Wml" id="step1-i"  style="margin-right: 100px;padding-top:0px;">
+
+    <div class="container">
+        <h2 class="mbr-section-title pb-3 mbr-fonts-style align-center display-2">
+            Recipe
+        </h2>
+        <div class="step-container" id="steps_for_recipe">
+            
+        </div>
+    </div>
+</section>
+</div>
+</div>
+
+
+<section once="footers" class="cid-rFQbHkj9FU" id="footer6-q">
+
+    
+
+    
+
+    <div class="container">
+        <div class="media-container-row align-center mbr-white">
+            <div class="col-12">
+                <p class="mbr-text mb-0 mbr-fonts-style display-7">
+                    © Copyright 2019 CookEase - All Rights Reserved
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+  <script src="{{ url_for('static', filename='assets/web/assets/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/popper/popper.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/tether/tether.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/smoothscroll/smooth-scroll.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vimeoplayer/jquery.mb.vimeo_player.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/parallax/jarallax.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/datatables/jquery.data-tables.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/datatables/data-tables.bootstrap4.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/theme/js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/formoid/formoid.min.js') }}"></script> 
+  
+</body>
+</html>

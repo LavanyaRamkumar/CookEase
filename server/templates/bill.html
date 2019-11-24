@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bill Upload</title>
+	<!-- <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap-grid.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap-reboot.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='our/trialgroc.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/logo4.png') }}" type="image/x-icon"> -->
+
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+	<!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/forpopup.min.css') }}">
+	<script src="{{ url_for('static', filename='web/assets/jquery/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='bootstrap/js/forpopup.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='our/import.js') }}"></script>  -->
+	<link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="../../static/assets/our/trialgroc.css">
+	<link rel="shortcut icon" href="../../static/assets/images/logo4.png" type="image/x-icon">
+
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+	<link rel="stylesheet" href="../../static/assets/bootstrap/css/forpopup.min.css">
+	<script src="../../static/assets/web/assets/jquery/jquery.min.js"></script>
+	<script src="../../static/assets/bootstrap/js/forpopup.min.js"></script>
+	<script src="../../static/assets/our/import.js"></script> 
+	<style >
+		.spinner-grow {
+			margin: auto;
+		}
+		.card {
+			margin-left: 60%;
+			margin-right: 15%;
+			position: absolute;
+			top:10%;
+		}
+		.card-img-top {
+			width: 80%;
+			height: auto;
+			margin:auto;
+			display: block;
+		}
+		.holder {
+	display:block;
+	margin-top: 10px;
+}
+
+.dropdown-item {
+	background: white;
+}
+
+.neg {
+	float: right;
+	border-radius: 50px;
+	width: 20px;
+	height: 20px;
+	border: none;
+}
+.card-deck {
+	margin-top:20px;
+	/*background: white*/
+}
+
+.neg:hover {
+	background: #BBBBBB;
+}
+
+.card-header {
+	font-size:1.3em;
+	font-family: "Montserrat"
+	background: white !important;
+}
+
+.card-title {
+	font-size:1.1em;
+	margin-top:30px;
+	font-family: "Montserrat";display:inline; 
+	position: relative;
+}
+
+#bill {
+	display: inline;
+	width: 40%;
+	height: auto;
+	margin-top: 5vw;
+	margin-left: 5vw;
+}
+
+#card {
+	display: inline;
+}
+#background {
+	width: 100vw;
+	height: 100vh;
+	/* -webkit-filter: blur(11px); */
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+	transform: scale(1.05);
+	position: fixed;
+}
+
+
+	</style>
+	<script>
+		tot = 0
+		xhr = new XMLHttpRequest()
+		function billsubmit() {
+			xhr.onreadystatechange = showval
+			xhr.open("GET", "http://localhost:5000/cookease/bill/", true)
+			xhr.send()
+			// sse = new EventSource("http://localhost:5000/cookease/bill/")
+			// sse.onmessage = showval
+		}
+		function toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+    function getVal(e) {
+		if(e.key=="Enter") {
+			theval = e.target.value
+			e.target.value=""
+			addcard(theval)
+			return
+		}
+	}
+	var objCategory = {
+		xhr: new XMLHttpRequest(),
+		matchStr: "",
+		get: function(matchStr) {
+			this.matchStr = matchStr
+			this.xhr.open("GET", "http://localhost:5000/cookease/category/"+matchStr, false)
+			this.xhr.onreadystatechange = this.set
+			this.xhr.send()
+		},
+		set: function() {
+			if(this.readyState==4 && this.status==200) {
+				add(JSON.parse(this.response), objCategory.matchStr)
+				tot-=1
+				console.log(tot)
+				if(tot==0)
+					window.location = "http://localhost:5000/groceries"
+			}
+		}
+	}
+	function getAdd(name) {
+		ch = document.getElementById("Ingredients").childNodes
+		for (var i = 0; i < ch.length; i++) {
+			if(ch[i].className=="holder") {
+				tot+=1
+				// console.log(ch[i].childNodes[0].innerHTML)
+				objCategory.get(ch[i].childNodes[0].innerHTML)
+			}
+		}
+	}
+	function add(cat, name) {
+		obj = JSON.parse(localStorage.getItem("pantry"))
+		if(obj[toTitleCase(name)]!=null)
+			return
+		obj[toTitleCase(name)] = cat
+		localStorage.setItem("pantry", 	JSON.stringify(obj))
+	}
+		function showval() {
+			console.log(xhr.readyState)
+			// console.log(e.data)
+			if(xhr.readyState==3 && xhr.status==200) {
+				// document.body.innerHTML = '<img id="background" src="../../static/assets/images/ing_back.jpg"><img id="bill" src="../../static/temp/temp.jpg"><div class="card mb-3">  <div class="card-header" style="background-color: white; display:inline"><input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)"></div>  <div class="card-body" id="Ingredients">  <img class="card-img-top" src="/static/assets/images/fv.jpg" alt="Card image cap" >    </div><button class="btn btn-primary" style="margin:5%" onclick="getAdd()">Add Ingredients</button></div>'
+				document.getElementById("Ingredients").innerHTML = '  <img class="card-img-top" src="/static/assets/images/fv.jpg" alt="Card image cap" >'
+				ing = xhr.responseText.split("\n")
+				total_len = parseInt(ing[0])
+				curr_len = parseInt(ing[ing.length-2].split("\t")[1])
+				// console.log(curr_len/total_len)
+				document.getElementById("bar").style = "text-indent:10px; text-align: left;"+"width:"+Math.round(curr_len*100/total_len)+"%;"
+				document.getElementById("bar").innerHTML = curr_len+"/"+total_len
+				for (var i = 1; i < ing.length; i++) {
+					if(ing[i]!="" && ing[i].split("\t")[0]!="") {
+						addcard(ing[i].split("\t")[0])
+					}
+				}
+			}
+
+			if(xhr.readyState==4) {
+				xhr.abort()
+				document.getElementById("spinner").innerHTML = '<input class="form-control" id="enteredIng" type="text" placeholder="Ingredient" style="display:inline" onkeyup="getVal(event)">'
+			}
+		}
+		function addcard(name) {
+		catDeck = document.getElementById("Ingredients")
+		newdiv = document.createElement("div")
+		newdiv.className= "holder"
+		title = document.createElement("h5")
+		title.className = "card-title "
+		title.innerHTML = toTitleCase(name)
+		negButton = document.createElement("img")
+		negButton.className = "neg"
+		negButton.src = "../../static/assets/images/close.jpg"
+		negButton.onclick = remove
+
+		newdiv.appendChild(title)
+		newdiv.appendChild(negButton)
+
+		catDeck.appendChild(newdiv)
+
+	}
+
+	function remove(e) {
+		holder = e.target.parentElement
+		holder.parentElement.removeChild(holder)
+	}
+		setTimeout(billsubmit, 50)
+
+	function getImg() {
+		document.getElementById("bill").src = "../../static/temp/temp.jpg?"+Date.now()
+	}
+	</script>
+</head>
+<body onload="getImg()">
+
+<img id="background" src="../../static/assets/images/ing_back.jpg">
+<img id="bill"><div class="card mb-3">  
+
+<div class="card-header" style="background-color: white; display:inline">
+
+<div id="spinner" style="display:inline; margin:none; padding:none;">
+<div class="progress" style="text-align: left">
+  <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="bar"></div>
+</div>
+<!-- <span style="color:white">EXTRACTING INGREDIENTS</span> -->
+</div>
+</div>
+  <div class="card-body" id="Ingredients">  <img class="card-img-top" src="/static/assets/images/fv.jpg" alt="Card image cap" >    </div><button class="btn btn-primary" style="margin:5%" onclick="getAdd()">Add Ingredients</button></div>
+
+
+	<!-- <img id="background" src="../../static/assets/images/ing_back.jpg"> -->
+	<!-- <img id="bill" src="../../static/temp/temp.jpg"> -->
+
+</body>
+</html>
